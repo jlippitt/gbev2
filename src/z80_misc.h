@@ -7,6 +7,7 @@
 void NOP()
 {
     debug("NOP");
+    tick(4);
 }
 
 void STOP()

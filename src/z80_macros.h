@@ -24,4 +24,9 @@ static inline Word next_word()
     return tmp;
 }
 
+static void tick(Word n)
+{
+    z80.regs.t = n;
+}
+
 #endif

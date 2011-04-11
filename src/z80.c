@@ -5,7 +5,7 @@
 #include "z80_macros.h"
 #include "z80_misc.h"
 
-struct Z80 z80 = {{0, 0}};
+struct Z80 z80 = {{0, 0, 0}, {0}};
 
 static void (*ops[])() = {
     // 0X
@@ -100,8 +100,11 @@ void z80_execute()
 
         (*ops[op])();
 
+        z80.clock.t += z80.regs.t;
+
         printf("PC=%04X ", PC);
-        printf("SP=%04X\n", SP);
+        printf("SP=%04X ", SP);
+        printf("T=%d\n", z80.clock.t);
     }
 }
 

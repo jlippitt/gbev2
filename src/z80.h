@@ -9,8 +9,15 @@ extern struct Z80
     {
         Word pc;
         Word sp;
+        Word t;
     }
     regs;
+
+    struct
+    {
+        Word t;
+    }
+    clock;
 }
 z80;
 

@@ -7,6 +7,7 @@ void LDSPnn()
 {
     debug("LD SP,nn");
     SP = next_word();
+    tick(12);
 }
 
 #endif
