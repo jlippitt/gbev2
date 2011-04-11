@@ -8,6 +8,7 @@ extern struct Z80
     struct
     {
         Word pc;
+        Word sp;
     }
     regs;
 }

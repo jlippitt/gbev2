@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "z80.h"
+#include "z80_load.h"
 #include "z80_macros.h"
 #include "z80_misc.h"
 
-struct Z80 z80 = {{0}};
+struct Z80 z80 = {{0, 0}};
 
 static void (*ops[])() = {
     // 0X
@@ -23,7 +24,7 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // 3X
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &LDSPnn,           &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -95,11 +96,12 @@ void z80_execute()
     {
         Byte op = next_byte();
 
-        printf("%02x: ", op);
+        printf("%02X: ", op);
 
         (*ops[op])();
 
-        printf("PC: %04x\n", PC);
+        printf("PC=%04X ", PC);
+        printf("SP=%04X\n", SP);
     }
 }
 

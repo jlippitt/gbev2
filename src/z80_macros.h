@@ -5,6 +5,7 @@
 #include "types.h"
 
 #define PC (z80.regs.pc)
+#define SP (z80.regs.sp)
 
 static inline void debug(const char *opstr)
 {
