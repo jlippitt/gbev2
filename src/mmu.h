@@ -1,10 +1,13 @@
 #ifndef MMU_H
 #define MMU_H
 
+#include <stdbool.h>
 #include "types.h"
 
-struct MMU
+extern struct MMU
 {
+    bool in_bios;
+    Byte bios[256];
     Byte rom[65536];
 }
 mmu;

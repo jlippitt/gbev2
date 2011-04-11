@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-struct Z80
+extern struct Z80
 {
     struct
     {
