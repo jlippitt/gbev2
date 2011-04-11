@@ -17,4 +17,11 @@ void LDSPnn()
     tick(12);
 }
 
+void LDDHLA()
+{
+    debug("LDD (HL),A");
+    mmu_putbyte(HL--, A);
+    tick(8);
+}
+
 #endif

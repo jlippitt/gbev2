@@ -1,6 +1,7 @@
 #ifndef Z80_MACROS_H
 #define Z80_MACROS_H
 
+#include <stdbool.h>
 #include "mmu.h"
 #include "types.h"
 
@@ -21,7 +22,7 @@
 
 static inline void debug(const char *opstr)
 {
-    printf("%s\n", opstr);
+    printf(": %s\n", opstr);
 }
 
 static inline Byte next_byte()
@@ -36,7 +37,34 @@ static inline Word next_word()
     return tmp;
 }
 
-static void tick(Word n)
+static inline bool isset_flag(Byte flag)
+{
+    return (F & flag) ? true : false;
+}
+
+static inline void set_flag(Byte flag)
+{
+    F |= flag;
+}
+
+static inline void reset_flag(Byte flag)
+{
+    F &= ~flag;
+}
+
+static inline void alter_flag(Byte flag, bool state)
+{
+    if (state)
+    {
+        set_flag(flag);
+    }
+    else
+    {
+        reset_flag(flag);
+    }
+}
+
+static inline void tick(Word n)
 {
     z80.regs.t = n;
 }

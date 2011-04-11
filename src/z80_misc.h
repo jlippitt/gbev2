@@ -16,4 +16,11 @@ void STOP()
     exit(0);
 }
 
+void EI()
+{
+    debug("EI");
+    // TODO: Not yet implemented
+    tick(4);
+}
+
 #endif

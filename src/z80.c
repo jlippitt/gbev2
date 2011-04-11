@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "z80.h"
+#include "z80_bit.h"
+#include "z80_jump.h"
 #include "z80_load.h"
 #include "z80_macros.h"
 #include "z80_math.h"
 #include "z80_misc.h"
 
 struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0}, {0}};
+
+static void ext_op();
 
 static void (*ops[])() = {
     // 0X
@@ -20,12 +24,12 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // 2X
-    &STOP,             &LDHLnn,           &STOP,             &STOP,
+    &JRNZn,            &LDHLnn,           &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // 3X
-    &STOP,             &LDSPnn,           &STOP,             &STOP,
+    &STOP,             &LDSPnn,           &LDDHLA,           &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -72,7 +76,7 @@ static void (*ops[])() = {
     // CX
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &ext_op,
     &STOP,             &STOP,             &STOP,             &STOP,
     // DX
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -87,6 +91,89 @@ static void (*ops[])() = {
     // FX
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &EI,
+    &STOP,             &STOP,             &STOP,             &STOP
+};
+
+static void (*ext_ops[])() = {
+    // CB0X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB1X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB2X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB3X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB4X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB5X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB6X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB7X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &BIT7H,            &STOP,             &STOP,             &STOP,
+    // CB8X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CB9X
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CBAX
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CBBX
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CBCX
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CBDX
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CBEX
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
+    // CBFX
+    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP
 };
@@ -97,7 +184,7 @@ void z80_execute()
     {
         Byte op = next_byte();
 
-        printf("%02X: ", op);
+        printf("%02X", op);
 
         (*ops[op])();
 
@@ -111,5 +198,14 @@ void z80_execute()
         printf("SP=%04X ", SP);
         printf("T=%d\n", z80.clock.t);
     }
+}
+
+void ext_op()
+{
+    Byte op = next_byte();
+
+    printf("%02X", op);
+
+    (*ext_ops[op])();
 }
 
