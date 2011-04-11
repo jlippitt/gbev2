@@ -3,6 +3,17 @@
 
 #include "z80_macros.h"
 
+#define DEF_LDrn(r1) \
+void LD##r1##n() \
+{ \
+    debug("LD " #r1 ",n"); \
+    r1 = next_byte(); \
+    tick(8); \
+}
+
+DEF_LDrn(A);
+DEF_LDrn(C);
+
 void LDHLnn()
 {
     debug("LD HL,nn");
