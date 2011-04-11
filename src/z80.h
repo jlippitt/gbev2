@@ -7,7 +7,58 @@ extern struct Z80
 {
     struct
     {
-        Byte a;
+        union
+        {
+            Word word;
+
+            struct
+            {
+                Byte upper;
+                Byte lower;
+            }
+            byte;
+        }
+        af;
+
+        union
+        {
+            Word word;
+
+            struct
+            {
+                Byte upper;
+                Byte lower;
+            }
+            byte;
+        }
+        bc;
+
+        union
+        {
+            Word word;
+
+            struct
+            {
+                Byte upper;
+                Byte lower;
+            }
+            byte;
+        }
+        de;
+
+        union
+        {
+            Word word;
+
+            struct
+            {
+                Byte upper;
+                Byte lower;
+            }
+            byte;
+        }
+        hl;
+
         Word pc;
         Word sp;
         Word t;

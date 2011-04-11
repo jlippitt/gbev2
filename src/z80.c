@@ -6,7 +6,7 @@
 #include "z80_math.h"
 #include "z80_misc.h"
 
-struct Z80 z80 = {{0, 0, 0, 0}, {0}};
+struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0}, {0}};
 
 static void (*ops[])() = {
     // 0X
@@ -20,7 +20,7 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // 2X
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &LDHLnn,           &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -103,7 +103,10 @@ void z80_execute()
 
         z80.clock.t += z80.regs.t;
 
-        printf("A=%02X ", A);
+        printf("AF=%04X ", AF);
+        printf("BC=%04X ", BC);
+        printf("DE=%04X ", DE);
+        printf("HL=%04X ", HL);
         printf("PC=%04X ", PC);
         printf("SP=%04X ", SP);
         printf("T=%d\n", z80.clock.t);

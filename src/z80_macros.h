@@ -4,7 +4,18 @@
 #include "mmu.h"
 #include "types.h"
 
-#define A  (z80.regs.a)
+#define A  (z80.regs.af.byte.upper)
+#define F  (z80.regs.af.byte.lower)
+#define B  (z80.regs.bc.byte.upper)
+#define C  (z80.regs.bc.byte.lower)
+#define D  (z80.regs.de.byte.upper)
+#define E  (z80.regs.de.byte.lower)
+#define H  (z80.regs.hl.byte.upper)
+#define L  (z80.regs.hl.byte.lower)
+#define AF (z80.regs.af.word)
+#define BC (z80.regs.bc.word)
+#define DE (z80.regs.de.word)
+#define HL (z80.regs.hl.word)
 #define PC (z80.regs.pc)
 #define SP (z80.regs.sp)
 
