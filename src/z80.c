@@ -3,9 +3,10 @@
 #include "z80.h"
 #include "z80_load.h"
 #include "z80_macros.h"
+#include "z80_math.h"
 #include "z80_misc.h"
 
-struct Z80 z80 = {{0, 0, 0}, {0}};
+struct Z80 z80 = {{0, 0, 0, 0}, {0}};
 
 static void (*ops[])() = {
     // 0X
@@ -62,7 +63,7 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &STOP,             &XORA,
     // BX
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -102,6 +103,7 @@ void z80_execute()
 
         z80.clock.t += z80.regs.t;
 
+        printf("A=%02X ", A);
         printf("PC=%04X ", PC);
         printf("SP=%04X ", SP);
         printf("T=%d\n", z80.clock.t);

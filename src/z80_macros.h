@@ -4,6 +4,7 @@
 #include "mmu.h"
 #include "types.h"
 
+#define A  (z80.regs.a)
 #define PC (z80.regs.pc)
 #define SP (z80.regs.sp)
 

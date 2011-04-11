@@ -7,6 +7,7 @@ extern struct Z80
 {
     struct
     {
+        Byte a;
         Word pc;
         Word sp;
         Word t;
