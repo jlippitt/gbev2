@@ -20,6 +20,11 @@
 #define PC (z80.regs.pc)
 #define SP (z80.regs.sp)
 
+#define ZERO        0x80
+#define NEGATIVE    0x40
+#define HALF_CARRY  0x20
+#define CARRY       0x10
+
 static inline void debug(const char *opstr)
 {
     printf(": %s\n", opstr);

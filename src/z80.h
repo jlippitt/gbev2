@@ -3,11 +3,6 @@
 
 #include "types.h"
 
-#define ZERO        0x80
-#define NEGATIVE    0x40
-#define HALF_CARRY  0x20
-#define CARRY       0x10
-
 extern struct Z80
 {
     struct
