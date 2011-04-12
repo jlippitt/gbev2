@@ -60,8 +60,8 @@ static inline Word next_word()
 
 static inline void push(Word value)
 {
-    mmu_putbyte(SP, value);
     SP -= 2;
+    mmu_putbyte(SP, value);
 }
 
 static inline Word pop()
