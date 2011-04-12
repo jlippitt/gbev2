@@ -7,6 +7,7 @@
 #include "z80_macros.h"
 #include "z80_math.h"
 #include "z80_misc.h"
+#include "z80_shift.h"
 
 struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0}, {0}};
 
@@ -15,14 +16,14 @@ static void ext_op();
 static void (*ops[])() = {
     // 0X
     &NOP,              &LDBCnn,           &LDBCA,            &INCBC,
-    &INCB,             &DECB,             &LDBn,             &STOP,
+    &INCB,             &DECB,             &LDBn,             &RLCA,
     &LDnnSP,           &ADDHLBC,          &LDABC,            &DECBC,
-    &INCC,             &DECC,             &LDCn,             &STOP,
+    &INCC,             &DECC,             &LDCn,             &RRCA,
     // 1X
     &STOP,             &LDDEnn,           &LDDEA,            &INCDE,
-    &INCD,             &DECD,             &LDDn,             &STOP,
+    &INCD,             &DECD,             &LDDn,             &RLA,
     &JRn,              &ADDHLDE,          &LDADE,            &DECDE,
-    &INCE,             &DECE,             &LDEn,             &STOP,
+    &INCE,             &DECE,             &LDEn,             &RRA,
     // 2X
     &JRNZn,            &LDHLnn,           &LDIHLA,           &INCHL,
     &INCH,             &DECH,             &LDHn,             &STOP,
@@ -97,15 +98,15 @@ static void (*ops[])() = {
 
 static void (*ext_ops[])() = {
     // CB0X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &RLCrB,            &RLCrC,            &RLCrD,            &RLCrE,
+    &RLCrH,            &RLCrL,            &RLCHL,            &RLCrA,
+    &RRCrB,            &RRCrC,            &RRCrD,            &RRCrE,
+    &RRCrH,            &RRCrL,            &RRCHL,            &RRCrA,
     // CB1X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &RLrB,             &RLrC,             &RLrD,             &RLrE,
+    &RLrH,             &RLrL,             &RLHL,             &RLrA,
+    &RRrB,             &RRrC,             &RRrD,             &RRrE,
+    &RRrH,             &RRrL,             &RRHL,             &RRrA,
     // CB2X
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
