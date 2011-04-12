@@ -108,6 +108,107 @@ void ADCAn()
     tick(8);
 }
 
+// Subtract r1 from A
+
+#define DEF_SUBAr(r1) \
+void SUBA##r1() \
+{ \
+    debug("SUB A," #r1); \
+    A -= r1; \
+    alter_flag(ZERO, A == 0); \
+    set_flag(NEGATIVE); \
+    alter_flag(HALF_CARRY, (A & 0xF) > (r1 & 0xF)); \
+    alter_flag(CARRY, A > r1); \
+    tick(4); \
+}
+
+DEF_SUBAr(A);
+DEF_SUBAr(B);
+DEF_SUBAr(C);
+DEF_SUBAr(D);
+DEF_SUBAr(E);
+DEF_SUBAr(H);
+DEF_SUBAr(L);
+
+// Subtract (HL) from A
+
+void SUBAHL()
+{
+    debug("SUB A,HL");
+    Byte tmp = mmu_getbyte(HL);
+    A -= tmp;
+    alter_flag(ZERO, A == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
+    alter_flag(CARRY, A > tmp);
+    tick(8);
+}
+
+// Subtract n from A
+
+void SUBAn()
+{
+    debug("SUB A,n");
+    Byte tmp = next_byte();
+    A -= tmp;
+    alter_flag(ZERO, A == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
+    alter_flag(CARRY, A > tmp);
+    tick(8);
+}
+
+// Subtract r1 + carry from A
+
+#define DEF_SBCAr(r1) \
+void SBCA##r1() \
+{ \
+    debug("SBC A," #r1); \
+    Byte tmp = r1 + isset_flag(CARRY); \
+    A -= tmp; \
+    alter_flag(ZERO, A == 0); \
+    set_flag(NEGATIVE); \
+    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF)); \
+    alter_flag(CARRY, A > tmp); \
+    tick(4); \
+}
+
+DEF_SBCAr(A);
+DEF_SBCAr(B);
+DEF_SBCAr(C);
+DEF_SBCAr(D);
+DEF_SBCAr(E);
+DEF_SBCAr(H);
+DEF_SBCAr(L);
+
+// Subtract (HL) + carry from A
+
+void SBCAHL()
+{
+    debug("SBC A,HL");
+    Byte tmp = mmu_getbyte(HL) + isset_flag(CARRY);
+    A -= tmp;
+    alter_flag(ZERO, A == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
+    alter_flag(CARRY, A > tmp);
+    tick(8);
+}
+
+// Subtract n + carry from A
+
+void SBCAn()
+{
+    debug("SBC A,n");
+    Byte tmp = next_byte() + isset_flag(CARRY);
+    A -= tmp;
+    alter_flag(ZERO, A == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
+    alter_flag(CARRY, A > tmp);
+    tick(8);
+}
+
 void XORA()
 {
     debug("XOR A");

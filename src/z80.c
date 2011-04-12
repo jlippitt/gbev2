@@ -59,10 +59,10 @@ static void (*ops[])() = {
     &ADCAB,            &ADCAC,            &ADCAD,            &ADCAE,
     &ADCAH,            &ADCAL,            &ADCAHL,           &ADCAA,
     // 9X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &SUBAB,            &SUBAC,            &SUBAD,            &SUBAE,
+    &SUBAH,            &SUBAL,            &SUBAHL,           &SUBAA,
+    &SBCAB,            &SBCAC,            &SBCAD,            &SBCAE,
+    &SBCAH,            &SBCAL,            &SBCAHL,           &SBCAA,
     // AX
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -80,9 +80,9 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &ADCAn,            &STOP,
     // DX
     &STOP,             &POPDE,            &STOP,             &STOP,
-    &STOP,             &PUSHDE,           &STOP,             &STOP,
+    &STOP,             &PUSHDE,           &SUBAn,            &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &SBCAn,            &STOP,
     // EX
     &LDHnA,            &POPHL,            &LDHCA,            &STOP,
     &STOP,             &PUSHHL,           &STOP,             &STOP,
