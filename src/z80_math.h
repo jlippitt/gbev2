@@ -426,7 +426,7 @@ DEF_INCr(L);
 
 // Increment (HL)
 
-void INCHL()
+void INCHLm()
 {
     debug("INC (HL)");
     Byte tmp = mmu_getbyte(HL) + 1;
@@ -460,7 +460,7 @@ DEF_DECr(L);
 
 // Decrement (HL)
 
-void DECHL()
+void DECHLm()
 {
     debug("DEC (HL)");
     Byte tmp = mmu_getbyte(HL) - 1;
@@ -470,5 +470,72 @@ void DECHL()
     alter_flag(HALF_CARRY, (tmp & 0xF) == 0xF);
     tick(12);
 }
+
+/*
+ * 16-bit arithmetic
+ */
+
+// Add r1 to HL
+
+#define DEF_ADDHLr(r1) \
+void ADDHL##r1() \
+{ \
+    debug("ADD HL," #r1); \
+    HL += r1; \
+    reset_flag(NEGATIVE); \
+    alter_flag(CARRY, HL < r1); \
+    alter_flag(HALF_CARRY, (HL & 0xFFF) < (r1 & 0xFFF)); \
+    tick(8); \
+}
+
+DEF_ADDHLr(BC);
+DEF_ADDHLr(DE);
+DEF_ADDHLr(HL);
+DEF_ADDHLr(SP);
+
+// Add n to SP
+
+void ADDSPn()
+{
+    debug("ADD SP,n");
+    Byte tmp = next_byte(); \
+    int32_t result = SP + (int8_t)tmp; \
+    SP = result & 0x0000FFFF; \
+    reset_flag(ZERO);
+    reset_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, ((SP & 0xF) + (tmp & 0xF)) > 0xF);
+    alter_flag(CARRY, result < 0 || result > 0xFFFF);
+    tick(16);
+}
+
+// Increment r1
+
+#define DEF_INCrr(r1) \
+void INC##r1() \
+{ \
+    debug("INC" #r1); \
+    r1++; \
+    tick(8); \
+}
+
+DEF_INCrr(BC);
+DEF_INCrr(DE);
+DEF_INCrr(HL);
+DEF_INCrr(SP);
+
+// Decrement r1
+
+#define DEF_DECrr(r1) \
+void DEC##r1() \
+{ \
+    debug("DEC" #r1); \
+    r1--; \
+    tick(8); \
+}
+
+DEF_DECrr(BC);
+DEF_DECrr(DE);
+DEF_DECrr(HL);
+DEF_DECrr(SP);
 
 #endif
