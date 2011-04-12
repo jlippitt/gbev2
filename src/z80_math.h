@@ -47,8 +47,8 @@ void ADDAHL()
 
 void ADDAn()
 {
-    debug("ADD A,n");
     Byte tmp = next_byte();
+    debug("ADD A,$%02X", tmp);
     A += tmp; \
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
@@ -98,8 +98,9 @@ void ADCAHL()
 
 void ADCAn()
 {
-    debug("ADC A,n");
-    Byte tmp = next_byte() + isset_flag(CARRY);
+    Byte tmp = next_byte();
+    debug("ADC A,$%02X", tmp);
+    tmp += isset_flag(CARRY);
     A += tmp; \
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
@@ -148,8 +149,8 @@ void SUBAHL()
 
 void SUBAn()
 {
-    debug("SUB A,n");
     Byte tmp = next_byte();
+    debug("SUB A,$%02X", tmp);
     A -= tmp;
     alter_flag(ZERO, A == 0);
     set_flag(NEGATIVE);
@@ -199,8 +200,9 @@ void SBCAHL()
 
 void SBCAn()
 {
-    debug("SBC A,n");
-    Byte tmp = next_byte() + isset_flag(CARRY);
+    Byte tmp = next_byte();
+    debug("SBC A,$%02X", tmp);
+    tmp += isset_flag(CARRY);
     A -= tmp;
     alter_flag(ZERO, A == 0);
     set_flag(NEGATIVE);
@@ -248,8 +250,9 @@ void ANDAHL()
 
 void ANDAn()
 {
-    debug("AND A,n");
-    A &= next_byte();
+    Byte tmp = next_byte();
+    debug("AND A,$%02X", tmp);
+    A &= tmp;
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
     set_flag(HALF_CARRY);
@@ -296,8 +299,9 @@ void ORAHL()
 
 void ORAn()
 {
-    debug("OR A,n");
-    A |= next_byte();
+    Byte tmp = next_byte();
+    debug("OR A,$%02X", tmp);
+    A |= tmp;
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
@@ -344,8 +348,9 @@ void XORAHL()
 
 void XORAn()
 {
-    debug("XOR A,n");
-    A ^= next_byte();
+    Byte tmp = next_byte();
+    debug("XOR A,$%02X", tmp);
+    A ^= tmp;
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
@@ -393,8 +398,8 @@ void CPAHL()
 
 void CPAn()
 {
-    debug("CP A,n");
     Byte tmp = next_byte();
+    debug("CP A,$%02X", tmp);
     Byte result = A - tmp;
     alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
@@ -497,8 +502,8 @@ DEF_ADDHLr(SP);
 
 void ADDSPn()
 {
-    debug("ADD SP,n");
     Byte tmp = next_byte(); \
+    debug("ADD SP,%d", (int8_t)tmp);
     int32_t result = SP + (int8_t)tmp; \
     SP = result & 0x0000FFFF; \
     reset_flag(ZERO);

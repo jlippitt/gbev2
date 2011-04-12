@@ -5,11 +5,11 @@
 
 void JRNZn()
 {
-    debug("JR NZ,n");
+    Byte tmp = next_byte();
+    debug("JR NZ,%d", (int8_t)tmp);
 
     if (!isset_flag(ZERO))
     {
-        Byte tmp = next_byte();
         PC += (int8_t)tmp;
     }
 
@@ -18,8 +18,8 @@ void JRNZn()
 
 void CALLnn()
 {
-    debug("CALL nn");
     Word tmp = next_word();
+    debug("CALL $%04X", tmp);
     push(PC);
     PC = tmp;
     tick(12);

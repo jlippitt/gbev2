@@ -72,8 +72,8 @@ DEF_LDrr(L, L);
 #define DEF_LDrn(r1) \
 void LD##r1##n() \
 { \
-    debug("LD " #r1 ",n"); \
     r1 = next_byte(); \
+    debug("LD " #r1 ",$%02X", r1); \
     tick(8); \
 }
 
@@ -129,8 +129,9 @@ DEF_LDmr(HL, L);
 
 void LDHLn()
 {
-    debug("LD (HL),n");
-    mmu_putbyte(HL, next_byte());
+    Byte tmp = next_byte();
+    debug("LD (HL),$%02X", tmp);
+    mmu_putbyte(HL, tmp);
     tick(12);
 }
 
@@ -138,8 +139,9 @@ void LDHLn()
 
 void LDAnn()
 {
-    debug("LD A,(nn)");
-    A = mmu_getbyte(next_word());
+    Word tmp = next_word();
+    debug("LD A,($%04X)", tmp);
+    A = mmu_getbyte(tmp);
     tick(16);
 }
 
@@ -147,8 +149,9 @@ void LDAnn()
 
 void LDnnA()
 {
-    debug("LD (nn),A");
-    mmu_putbyte(next_word(), A);
+    Word tmp = next_word();
+    debug("LD ($%04X),A", tmp);
+    mmu_putbyte(tmp, A);
     tick(16);
 }
 
@@ -210,8 +213,9 @@ void LDIHLA()
 
 void LDHnA()
 {
-    debug("LDH ($FF00+n),A");
-    mmu_putbyte(0xFF00 + next_byte(), A);
+    Byte tmp = next_byte();
+    debug("LDH ($FF00+$%02X),A", tmp);
+    mmu_putbyte(0xFF00 + tmp, A);
     tick(12);
 }
 
@@ -219,8 +223,9 @@ void LDHnA()
 
 void LDHAn()
 {
-    debug("LDH A,($FF00+n)");
-    A = mmu_getbyte(0xFF00 + next_byte());
+    Byte tmp = next_byte();
+    debug("LDH A,($FF00+$%02X)", tmp);
+    A = mmu_getbyte(0xFF00 + tmp);
     tick(12);
 }
 
@@ -233,8 +238,8 @@ void LDHAn()
 #define DEF_LDrrnn(r1) \
 void LD##r1##nn() \
 { \
-    debug("LD " #r1 ",nn"); \
     r1 = next_word(); \
+    debug("LD " #r1 ",$%04X", r1); \
     tick(12); \
 }
 
@@ -256,8 +261,8 @@ void LDSPHL()
 
 void LDHLSPn()
 {
-    debug("LD HL,SP+n");
     Byte tmp = next_byte(); \
+    debug("LD HL,SP+%d", (int8_t)tmp);
     int32_t result = SP + (int8_t)tmp; \
     HL = result & 0x0000FFFF; \
     reset_flag(ZERO);
@@ -271,8 +276,9 @@ void LDHLSPn()
 
 void LDnnSP()
 {
-    debug("LD (nn),SP");
-    mmu_putbyte(next_word(), SP);
+    Word tmp = next_word();
+    debug("LD ($%04X),SP", tmp);
+    mmu_putbyte(tmp, SP);
     tick(20);
 }
 

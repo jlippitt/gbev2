@@ -1,6 +1,7 @@
 #ifndef Z80_MACROS_H
 #define Z80_MACROS_H
 
+#include <stdarg.h>
 #include <stdbool.h>
 #include "mmu.h"
 #include "types.h"
@@ -31,9 +32,14 @@
 
 // Debug statements
 
-static inline void debug(const char *opstr)
+static inline void debug(const char *format, ...)
 {
-    printf(": %s\n", opstr);
+    va_list args;
+    printf(": ");
+    va_start(args, format);
+    vprintf(format, args);
+    va_end(args);
+    printf("\n");
 }
 
 // Immediate values (from ROM)
