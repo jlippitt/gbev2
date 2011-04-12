@@ -3,62 +3,26 @@
 
 #include "types.h"
 
+union Z80_WordReg
+{
+    Word word;
+
+    struct
+    {
+        Byte upper;
+        Byte lower;
+    }
+    byte;
+};
+
 extern struct Z80
 {
     struct
     {
-        union
-        {
-            Word word;
-
-            struct
-            {
-                Byte upper;
-                Byte lower;
-            }
-            byte;
-        }
-        af;
-
-        union
-        {
-            Word word;
-
-            struct
-            {
-                Byte upper;
-                Byte lower;
-            }
-            byte;
-        }
-        bc;
-
-        union
-        {
-            Word word;
-
-            struct
-            {
-                Byte upper;
-                Byte lower;
-            }
-            byte;
-        }
-        de;
-
-        union
-        {
-            Word word;
-
-            struct
-            {
-                Byte upper;
-                Byte lower;
-            }
-            byte;
-        }
-        hl;
-
+        union Z80_WordReg af;
+        union Z80_WordReg bc;
+        union Z80_WordReg de;
+        union Z80_WordReg hl;
         Word pc;
         Word sp;
         Word t;
