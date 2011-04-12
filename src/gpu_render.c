@@ -12,14 +12,14 @@
 
 // Flags
 
-#define BACKGROUND   0x80
-#define SPRITE       0x40
-#define SPRITE_SIZE  0x20
-#define BG_TILE_MAP  0x10
-#define BG_TILE_SET  0x08
-#define WINDOW       0x04
-#define WND_TILE_MAP 0x02
-#define DISPLAY      0x01
+#define BACKGROUND   0x01
+#define SPRITE       0x02
+#define SPRITE_SIZE  0x04
+#define BG_TILE_MAP  0x08
+#define BG_TILE_SET  0x10
+#define WINDOW       0x20
+#define WND_TILE_MAP 0x40
+#define DISPLAY      0x80
 
 static Byte *get_tile(Word map_offset);
 static void draw_pixel(const Byte *tile, Byte x, Byte y, uint32_t *pixel);
