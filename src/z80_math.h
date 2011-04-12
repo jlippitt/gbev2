@@ -353,11 +353,54 @@ void XORAn()
     tick(8);
 }
 
-void XORA()
+// Compare r1 with A
+
+#define DEF_CPAr(r1) \
+void CPA##r1() \
+{ \
+    debug("CP A," #r1); \
+    Byte result = A - r1; \
+    alter_flag(ZERO, result == 0); \
+    set_flag(NEGATIVE); \
+    alter_flag(HALF_CARRY, (result & 0xF) > (r1 & 0xF)); \
+    alter_flag(CARRY, result > r1); \
+    tick(4); \
+}
+
+DEF_CPAr(A);
+DEF_CPAr(B);
+DEF_CPAr(C);
+DEF_CPAr(D);
+DEF_CPAr(E);
+DEF_CPAr(H);
+DEF_CPAr(L);
+
+// Compare (HL) with A
+
+void CPAHL()
 {
-    debug("XOR A");
-    A ^= A;
-    tick(4);
+    debug("CP A,HL");
+    Byte tmp = mmu_getbyte(HL);
+    Byte result = A - tmp;
+    alter_flag(ZERO, result == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (result & 0xF) > (tmp & 0xF));
+    alter_flag(CARRY, result > tmp);
+    tick(8);
+}
+
+// Compare n with A
+
+void CPAn()
+{
+    debug("CP A,n");
+    Byte tmp = next_byte();
+    Byte result = A - tmp;
+    alter_flag(ZERO, result == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (result & 0xF) > (tmp & 0xF));
+    alter_flag(CARRY, result > tmp);
+    tick(8);
 }
 
 void INCC()

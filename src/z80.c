@@ -71,8 +71,8 @@ static void (*ops[])() = {
     // BX
     &ORAB,             &ORAC,             &ORAD,             &ORAE,
     &ORAH,             &ORAL,             &ORAHL,            &ORAA,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &CPAB,             &CPAC,             &CPAD,             &CPAE,
+    &CPAH,             &CPAL,             &CPAHL,            &CPAA,
     // CX
     &STOP,             &POPBC,            &STOP,             &STOP,
     &STOP,             &PUSHBC,           &ADDAn,            &STOP,
@@ -92,7 +92,7 @@ static void (*ops[])() = {
     &LDHAn,            &POPAF,            &LDHAC,            &STOP,
     &STOP,             &PUSHAF,           &ORAn,             &STOP,
     &LDHLSPn,          &LDSPHL,           &LDAnn,            &EI,
-    &STOP,             &STOP,             &STOP,             &STOP
+    &STOP,             &STOP,             &CPAn,             &STOP
 };
 
 static void (*ext_ops[])() = {
