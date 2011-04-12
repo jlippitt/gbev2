@@ -403,14 +403,72 @@ void CPAn()
     tick(8);
 }
 
-void INCC()
+// Increment r1
+
+#define DEF_INCr(r1) \
+void INC##r1() \
+{ \
+    debug("INC " #r1); \
+    r1++; \
+    alter_flag(ZERO, r1 == 0); \
+    reset_flag(NEGATIVE); \
+    alter_flag(HALF_CARRY, (r1 & 0xF) == 0); \
+    tick(4); \
+}
+
+DEF_INCr(A);
+DEF_INCr(B);
+DEF_INCr(C);
+DEF_INCr(D);
+DEF_INCr(E);
+DEF_INCr(H);
+DEF_INCr(L);
+
+// Increment (HL)
+
+void INCHL()
 {
-    debug("INC C");
-    C++;
-    alter_flag(ZERO, C);
+    debug("INC (HL)");
+    Byte tmp = mmu_getbyte(HL) + 1;
+    mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (C & 0xF) == 0);
-    tick(4);
+    alter_flag(HALF_CARRY, (tmp & 0xF) == 0);
+    tick(12);
+}
+
+// Decrement r1
+
+#define DEF_DECr(r1) \
+void DEC##r1() \
+{ \
+    debug("DEC " #r1); \
+    r1--; \
+    alter_flag(ZERO, r1 == 0); \
+    set_flag(NEGATIVE); \
+    alter_flag(HALF_CARRY, (r1 & 0xF) == 0xF); \
+    tick(4); \
+}
+
+DEF_DECr(A);
+DEF_DECr(B);
+DEF_DECr(C);
+DEF_DECr(D);
+DEF_DECr(E);
+DEF_DECr(H);
+DEF_DECr(L);
+
+// Decrement (HL)
+
+void DECHL()
+{
+    debug("DEC (HL)");
+    Byte tmp = mmu_getbyte(HL) - 1;
+    mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
+    set_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (tmp & 0xF) == 0xF);
+    tick(12);
 }
 
 #endif

@@ -15,24 +15,24 @@ static void ext_op();
 static void (*ops[])() = {
     // 0X
     &NOP,              &LDBCnn,           &LDBCA,            &STOP,
-    &STOP,             &STOP,             &LDBn,             &STOP,
+    &INCB,             &DECB,             &LDBn,             &STOP,
     &LDnnSP,           &STOP,             &LDABC,            &STOP,
-    &INCC,             &STOP,             &LDCn,             &STOP,
+    &INCC,             &DECC,             &LDCn,             &STOP,
     // 1X
     &STOP,             &LDDEnn,           &LDDEA,            &STOP,
-    &STOP,             &STOP,             &LDDn,             &STOP,
+    &INCD,             &DECD,             &LDDn,             &STOP,
     &STOP,             &STOP,             &LDADE,            &STOP,
-    &STOP,             &STOP,             &LDEn,             &STOP,
+    &INCE,             &DECE,             &LDEn,             &STOP,
     // 2X
     &JRNZn,            &LDHLnn,           &LDIHLA,           &STOP,
-    &STOP,             &STOP,             &LDHn,             &STOP,
+    &INCH,             &DECH,             &LDHn,             &STOP,
     &STOP,             &STOP,             &LDIAHL,           &STOP,
-    &STOP,             &STOP,             &LDLn,             &STOP,
+    &INCL,             &DECL,             &LDLn,             &STOP,
     // 3X
     &STOP,             &LDSPnn,           &LDDHLA,           &STOP,
-    &STOP,             &STOP,             &LDHLn,            &STOP,
+    &INCHL,            &DECHL,            &LDHLn,            &STOP,
     &STOP,             &STOP,             &LDDAHL,           &STOP,
-    &STOP,             &STOP,             &LDAn,             &STOP,
+    &INCA,             &DECA,             &LDAn,             &STOP,
     // 4X
     &LDBB,             &LDBC,             &LDBD,             &LDBE,
     &LDBH,             &LDBL,             &LDBHL,            &LDBA,
