@@ -4,11 +4,18 @@
 #include <stdbool.h>
 #include "types.h"
 
+#define WRAM_SIZE 8192
+#define ERAM_SIZE 32768
+#define ZRAM_SIZE 127
+
 extern struct MMU
 {
     bool in_bios;
     Byte bios[256];
     Byte rom[65536];
+    Byte wram[WRAM_SIZE];
+    Byte eram[ERAM_SIZE];
+    Byte zram[ZRAM_SIZE];
 }
 mmu;
 
