@@ -5,6 +5,8 @@
 #include "mmu.h"
 #include "types.h"
 
+// Registers
+
 #define A  (z80.regs.af.byte.upper)
 #define F  (z80.regs.af.byte.lower)
 #define B  (z80.regs.bc.byte.upper)
@@ -20,15 +22,21 @@
 #define PC (z80.regs.pc)
 #define SP (z80.regs.sp)
 
+// Flags
+
 #define ZERO        0x80
 #define NEGATIVE    0x40
 #define HALF_CARRY  0x20
 #define CARRY       0x10
 
+// Debug statements
+
 static inline void debug(const char *opstr)
 {
     printf(": %s\n", opstr);
 }
+
+// Immediate values (from ROM)
 
 static inline Byte next_byte()
 {
@@ -41,6 +49,8 @@ static inline Word next_word()
     PC += 2;
     return tmp;
 }
+
+// Flag manipulation
 
 static inline bool isset_flag(Byte flag)
 {
@@ -68,6 +78,8 @@ static inline void alter_flag(Byte flag, bool state)
         reset_flag(flag);
     }
 }
+
+// CPU clock
 
 static inline void tick(Word n)
 {
