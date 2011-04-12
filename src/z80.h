@@ -9,8 +9,8 @@ union Z80_WordReg
 
     struct
     {
-        Byte upper;
         Byte lower;
+        Byte upper;
     }
     byte;
 };
