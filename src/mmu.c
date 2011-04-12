@@ -52,15 +52,23 @@ void mmu_load(const char *path)
 {
     FILE *fp = fopen(path, "rb");
 
-    fseek(fp, 0, SEEK_END);
-    long len = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    if (fp)
+    {
+        fseek(fp, 0, SEEK_END);
+        long len = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
 
-    mmu.rom = malloc(len + 1);
+        mmu.rom = malloc(len + 1);
 
-    fread(mmu.rom, 1, len, fp);
+        fread(mmu.rom, 1, len, fp);
 
-    fclose(fp);
+        fclose(fp);
+    }
+    else
+    {
+        fprintf(stderr, "Failed to open %s\n", path);
+        exit(1);
+    }
 }
 
 Byte mmu_getbyte(Word addr)
