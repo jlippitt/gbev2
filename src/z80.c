@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <SDL/SDL.h>
+#include "gpu.h"
 #include "z80.h"
 #include "z80_bit.h"
 #include "z80_jump.h"
@@ -194,6 +195,8 @@ void z80_execute()
         (*ops[op])();
 
         z80.clock.t += z80.regs.t;
+
+        gpu_step(z80.regs.t);
 
         printf("AF=%04X ", AF);
         printf("BC=%04X ", BC);
