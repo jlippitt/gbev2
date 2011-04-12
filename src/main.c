@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 {
     gpu_reset();
     mmu_reset();
+    mmu_load(argv[1]);
     z80_execute();
 
     return 0;

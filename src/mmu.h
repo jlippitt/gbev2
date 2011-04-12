@@ -12,7 +12,7 @@ extern struct MMU
 {
     bool in_bios;
     Byte bios[256];
-    Byte rom[65536];
+    Byte *rom;
     Byte wram[WRAM_SIZE];
     Byte eram[ERAM_SIZE];
     Byte zram[ZRAM_SIZE];
@@ -20,6 +20,8 @@ extern struct MMU
 mmu;
 
 void mmu_reset();
+
+void mmu_load(const char *path);
 
 Byte mmu_getbyte(Word addr);
 
