@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 #include "gpu.h"
 #include "gpu_render.h"
 
@@ -68,11 +69,11 @@ Byte *get_tile(Word map_offset)
 {
     if (isset_flag(BG_TILE_SET))
     {
-        return gpu.vram + gpu.vram[map_offset];
+        return gpu.vram + gpu.vram[map_offset] * 16;
     }
     else
     {
-        return gpu.vram + 0x1000 + (int8_t)gpu.vram[map_offset];
+        return gpu.vram + 0x1000 + ((int8_t)gpu.vram[map_offset]) * 16;
     }
 }
 
