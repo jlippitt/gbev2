@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-std=c99 -Wall
 LDFLAGS=-Wall
-LDLIBS=
+LDLIBS=-lmingw32 -lSDLmain -lSDL
 SOURCES=$(wildcard src/*.c)
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=gbe.exe

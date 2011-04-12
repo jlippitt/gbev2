@@ -1,5 +1,7 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <SDL/SDL.h>
 #include "z80.h"
 #include "z80_bit.h"
 #include "z80_jump.h"
@@ -181,7 +183,9 @@ static void (*ext_ops[])() = {
 
 void z80_execute()
 {
-    while (1)
+    bool running;
+
+    while (running)
     {
         Byte op = next_byte();
 
@@ -198,6 +202,17 @@ void z80_execute()
         printf("PC=%04X ", PC);
         printf("SP=%04X ", SP);
         printf("T=%d\n", z80.clock.t);
+
+        SDL_Event event;
+
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_QUIT)
+            {
+                running = false;
+                break;
+            }
+        }
     }
 }
 

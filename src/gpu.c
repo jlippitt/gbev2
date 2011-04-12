@@ -1,6 +1,6 @@
 #include "gpu.h"
 
-struct GPU gpu;
+struct GPU gpu = {NULL};
 
 void gpu_reset()
 {
@@ -13,5 +13,7 @@ void gpu_reset()
     {
         gpu.oam[i] = 0;
     }
+
+    gpu.screen = SDL_SetVideoMode(160, 144, 0, SDL_HWSURFACE | SDL_DOUBLEBUF);
 }
 
