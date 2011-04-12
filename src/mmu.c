@@ -1,3 +1,4 @@
+#include "gpu.h"
 #include "mmu.h"
 #include "z80.h"
 
@@ -82,8 +83,7 @@ Byte mmu_getbyte(Word addr)
         // Graphics: VRAM (8k)
         case 0x8000:
         case 0x9000:
-            // TODO
-            return 0;
+            return gpu.vram[addr & 0x1FFF];
 
         // External RAM (8k)
         case 0xA000:
@@ -114,8 +114,7 @@ Byte mmu_getbyte(Word addr)
                 case 0xE00:
                     if (addr < 0xFEA0)
                     {
-                        // TODO
-                        return 0;
+                        return gpu.oam[addr & 0xFF];
                     }
                     else
                     {
@@ -153,6 +152,7 @@ void mmu_putbyte(Word addr, Byte value)
         case 0x2000:
         case 0x3000:
             mmu.rom[addr] = value;
+            break;
 
         // ROM1 (unbanked) (16k)
         case 0x4000:
@@ -160,25 +160,30 @@ void mmu_putbyte(Word addr, Byte value)
         case 0x6000:
         case 0x7000:
             mmu.rom[addr] = value;
+            break;
 
         // Graphics: VRAM (8k)
         case 0x8000:
         case 0x9000:
-            // TODO
+            gpu.vram[addr & 0x1FFF] = value;
+            break;
 
         // External RAM (8k)
         case 0xA000:
         case 0xB000:
             mmu.eram[addr & 0x1FFF] = value;
+            break;
 
         // Working RAM (8k)
         case 0xC000:
         case 0xD000:
             mmu.wram[addr & 0x1FFF] = value;
+            break;
 
         // Working RAM shadow
         case 0xE000:
             mmu.wram[addr & 0x1FFF] = value;
+            break;
 
         // Working RAM shadow, I/O, Zero-page RAM
         default:
@@ -189,14 +194,16 @@ void mmu_putbyte(Word addr, Byte value)
                 case 0x800: case 0x900: case 0xA00: case 0xB00:
                 case 0xC00: case 0xD00:
                     mmu.wram[addr & 0x1FFF] = value;
+                    break;
 
                 // Graphics: object attribute memory
                 // OAM is 160 bytes, remaining bytes read as 0
                 case 0xE00:
                     if (addr < 0xFEA0)
                     {
-                        // TODO
+                        gpu.oam[addr & 0xFF] = value;
                     }
+                    break;
 
                 // Zero-page
                 default:
