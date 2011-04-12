@@ -238,7 +238,7 @@ void mmu_putbyte(Word addr, Byte value)
 
 void mmu_putword(Word addr, Word value)
 {
-    mmu.rom[addr] = value & 0xFF;
-    mmu.rom[addr + 1] = value >> 8;
+    mmu_putbyte(addr, value & 0xFF);
+    mmu_putbyte(addr + 1, value >> 8);
 }
 
