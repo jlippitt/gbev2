@@ -50,6 +50,21 @@ static inline Word next_word()
     return tmp;
 }
 
+// Stack values
+
+static inline void push(Word value)
+{
+    mmu_putbyte(SP, value);
+    SP -= 2;
+}
+
+static inline Word pop()
+{
+    Word tmp = mmu_getbyte(SP);
+    SP += 2;
+    return tmp;
+}
+
 // Flag manipulation
 
 static inline bool isset_flag(Byte flag)

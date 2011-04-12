@@ -228,18 +228,82 @@ void LDHAn()
  * 16-bit loads
  */
 
-void LDHLnn()
+// Load nn into r1
+
+#define DEF_LDrrnn(r1) \
+void LD##r1##nn() \
+{ \
+    debug("LD " #r1 ",nn"); \
+    r1 = next_word(); \
+    tick(12); \
+}
+
+DEF_LDrrnn(BC);
+DEF_LDrrnn(DE);
+DEF_LDrrnn(HL);
+DEF_LDrrnn(SP);
+
+// Load HL into SP
+
+void LDSPHL()
 {
-    debug("LD HL,nn");
-    HL = next_word();
+    debug("LD SP,HL");
+    SP = HL;
+    tick(8);
+}
+
+// Load SP + n into HL
+
+void LDHLSPn()
+{
+    debug("LD HL,SP+n");
+    Byte tmp = next_byte(); \
+    int32_t result = SP + (int8_t)tmp; \
+    HL = result & 0x0000FFFF; \
+    reset_flag(ZERO);
+    reset_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, ((SP & 0xF) + (tmp & 0xF)) > 0xF);
+    alter_flag(CARRY, result < 0 || result > 0xFFFF);
     tick(12);
 }
 
-void LDSPnn()
+// Load SP into (nn)
+
+void LDnnSP()
 {
-    debug("LD SP,nn");
-    SP = next_word();
-    tick(12);
+    debug("LD (nn),SP");
+    mmu_putbyte(next_word(), SP);
+    tick(20);
 }
+
+// Push r1 onto stack
+
+#define DEF_PUSHrr(r1) \
+void PUSH##r1() \
+{ \
+    debug("PUSH " #r1); \
+    push(r1); \
+    tick(16); \
+}
+
+DEF_PUSHrr(AF);
+DEF_PUSHrr(BC);
+DEF_PUSHrr(DE);
+DEF_PUSHrr(HL);
+
+// Pop r1 from stack
+
+#define DEF_POPrr(r1) \
+void POP##r1() \
+{ \
+    debug("POP " #r1); \
+    r1 = pop(); \
+    tick(12); \
+}
+
+DEF_POPrr(AF);
+DEF_POPrr(BC);
+DEF_POPrr(DE);
+DEF_POPrr(HL);
 
 #endif

@@ -14,12 +14,12 @@ static void ext_op();
 
 static void (*ops[])() = {
     // 0X
-    &NOP,              &STOP,             &LDBCA,            &STOP,
+    &NOP,              &LDBCnn,           &LDBCA,            &STOP,
     &STOP,             &STOP,             &LDBn,             &STOP,
-    &STOP,             &STOP,             &LDABC,            &STOP,
+    &LDnnSP,           &STOP,             &LDABC,            &STOP,
     &INCC,             &STOP,             &LDCn,             &STOP,
     // 1X
-    &STOP,             &STOP,             &LDDEA,            &STOP,
+    &STOP,             &LDDEnn,           &LDDEA,            &STOP,
     &STOP,             &STOP,             &LDDn,             &STOP,
     &STOP,             &STOP,             &LDADE,            &STOP,
     &STOP,             &STOP,             &LDEn,             &STOP,
@@ -74,24 +74,24 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // CX
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &POPBC,            &STOP,             &STOP,
+    &STOP,             &PUSHBC,           &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &ext_op,
     &STOP,             &STOP,             &STOP,             &STOP,
     // DX
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &POPDE,            &STOP,             &STOP,
+    &STOP,             &PUSHDE,           &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // EX
-    &LDHnA,            &STOP,             &LDHCA,            &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &LDHnA,            &POPHL,            &LDHCA,            &STOP,
+    &STOP,             &PUSHHL,           &STOP,             &STOP,
     &STOP,             &STOP,             &LDnnA,            &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // FX
-    &LDHAn,            &STOP,             &LDHAC,            &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &LDAnn,            &EI,
+    &LDHAn,            &POPAF,            &LDHAC,            &STOP,
+    &STOP,             &PUSHAF,           &STOP,             &STOP,
+    &LDHLSPn,          &LDSPHL,           &LDAnn,            &EI,
     &STOP,             &STOP,             &STOP,             &STOP
 };
 
