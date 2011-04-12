@@ -146,8 +146,7 @@ Byte mmu_getbyte(Word addr)
                     else
                     {
                         // I/O control handling
-                        // TODO
-                        return 0;
+                        return gpu_getbyte(addr);
                     }
             }
     }
@@ -230,7 +229,7 @@ void mmu_putbyte(Word addr, Byte value)
                     else
                     {
                         // I/O control handling
-                        // TODO
+                        gpu_putbyte(addr, value);
                     }
             }
     }

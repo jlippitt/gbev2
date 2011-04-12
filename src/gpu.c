@@ -1,6 +1,8 @@
 #include "gpu.h"
 
-struct GPU gpu = {NULL, 0, 0, 0};
+static void renderscan();
+
+struct GPU gpu = {NULL, 0, 0, {0, 0, 0, 0, 0}};
 
 void gpu_reset()
 {
@@ -24,7 +26,51 @@ void gpu_reset()
 
     gpu.mode = 0;
     gpu.modeclock = 0;
-    gpu.line = 0;
+
+    gpu.regs.control = 0;
+    gpu.regs.scrollx = 0;
+    gpu.regs.scrolly = 0;
+    gpu.regs.line = 0;
+    gpu.regs.palette = 0;
+}
+
+Byte gpu_getbyte(Word addr)
+{
+    switch (addr)
+    {
+        case 0xFF40:
+            return gpu.regs.control;
+
+        case 0xFF42:
+            return gpu.regs.scrollx;
+
+        case 0xFF43:
+            return gpu.regs.scrolly;
+
+        case 0xFF44:
+            return gpu.regs.line;
+
+        default:
+            return 0;
+    }
+}
+
+void gpu_putbyte(Word addr, Byte value)
+{
+    switch (addr)
+    {
+        case 0xFF40:
+            gpu.regs.control = value;
+
+        case 0xFF42:
+            gpu.regs.scrollx = value;
+
+        case 0xFF43:
+            gpu.regs.scrolly = value;
+
+        case 0xFF47:
+            gpu.regs.palette = value;
+    }
 }
 
 void gpu_step(Word ticks)
@@ -50,7 +96,7 @@ void gpu_step(Word ticks)
                 gpu.modeclock = 0;
                 gpu.mode = HBLANK_MODE;
 
-                // TODO: Render scanline
+                renderscan();
             }
             break;
 
@@ -59,9 +105,9 @@ void gpu_step(Word ticks)
             if (gpu.modeclock >= 204)
             {
                 gpu.modeclock = 0;
-                gpu.line++;
+                gpu.regs.line++;
 
-                if (gpu.line == 143)
+                if (gpu.regs.line == 143)
                 {
                     gpu.mode = VBLANK_MODE;
                     SDL_Flip(gpu.screen);
@@ -78,13 +124,13 @@ void gpu_step(Word ticks)
             if (gpu.modeclock >= 456)
             {
                 gpu.modeclock = 0;
-                gpu.line++;
+                gpu.regs.line++;
 
-                if (gpu.line > 153)
+                if (gpu.regs.line > 153)
                 {
                     // Restart scanning modes
                     gpu.mode = OAM_MODE;
-                    gpu.line = 0;
+                    gpu.regs.line = 0;
                 }
             }
             break;
@@ -93,5 +139,9 @@ void gpu_step(Word ticks)
             // Nothing
             break;
     }
+}
+
+void renderscan()
+{
 }
 

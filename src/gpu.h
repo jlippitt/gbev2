@@ -17,13 +17,27 @@ extern struct GPU
     SDL_Surface *screen;
     Byte mode;
     Word modeclock;
-    Byte line;
+
+    struct
+    {
+        Byte control;
+        Byte scrollx;
+        Byte scrolly;
+        Byte line;
+        Byte palette;
+    }
+    regs;
+
     Byte vram[VRAM_SIZE];
     Byte oam[OAM_SIZE];
 }
 gpu;
 
 void gpu_reset();
+
+Byte gpu_getbyte(Word addr);
+
+void gpu_putbyte(Word addr, Byte value);
 
 void gpu_step(Word ticks);
 
