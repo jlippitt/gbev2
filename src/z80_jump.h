@@ -16,4 +16,13 @@ void JRNZn()
     tick(8);
 }
 
+void CALLnn()
+{
+    debug("CALL nn");
+    Word tmp = next_word();
+    push(PC);
+    PC = tmp;
+    tick(12);
+}
+
 #endif

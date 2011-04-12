@@ -77,7 +77,7 @@ static void (*ops[])() = {
     &STOP,             &POPBC,            &STOP,             &STOP,
     &STOP,             &PUSHBC,           &ADDAn,            &STOP,
     &STOP,             &STOP,             &STOP,             &ext_op,
-    &STOP,             &STOP,             &ADCAn,            &STOP,
+    &STOP,             &CALLnn,           &ADCAn,            &STOP,
     // DX
     &STOP,             &POPDE,            &STOP,             &STOP,
     &STOP,             &PUSHDE,           &SUBAn,            &STOP,
