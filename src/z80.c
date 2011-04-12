@@ -14,45 +14,45 @@ static void ext_op();
 
 static void (*ops[])() = {
     // 0X
-    &NOP,              &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &NOP,              &STOP,             &LDBCA,            &STOP,
+    &STOP,             &STOP,             &LDBn,             &STOP,
+    &STOP,             &STOP,             &LDABC,            &STOP,
     &INCC,             &STOP,             &LDCn,             &STOP,
     // 1X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &LDDEA,            &STOP,
+    &STOP,             &STOP,             &LDDn,             &STOP,
+    &STOP,             &STOP,             &LDADE,            &STOP,
+    &STOP,             &STOP,             &LDEn,             &STOP,
     // 2X
-    &JRNZn,            &LDHLnn,           &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &JRNZn,            &LDHLnn,           &LDIHLA,           &STOP,
+    &STOP,             &STOP,             &LDHn,             &STOP,
+    &STOP,             &STOP,             &LDIAHL,           &STOP,
+    &STOP,             &STOP,             &LDLn,             &STOP,
     // 3X
     &STOP,             &LDSPnn,           &LDDHLA,           &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &LDHLn,            &STOP,
+    &STOP,             &STOP,             &LDDAHL,           &STOP,
     &STOP,             &STOP,             &LDAn,             &STOP,
     // 4X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &LDBB,             &LDBC,             &LDBD,             &LDBE,
+    &LDBH,             &LDBL,             &LDBHL,            &LDBA,
+    &LDCB,             &LDCC,             &LDCD,             &LDCE,
+    &LDCH,             &LDCL,             &LDCHL,            &LDCA,
     // 5X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &LDDB,             &LDDC,             &LDDD,             &LDDE,
+    &LDDH,             &LDDL,             &LDDHL,            &LDDA,
+    &LDEB,             &LDEC,             &LDED,             &LDEE,
+    &LDEH,             &LDEL,             &LDEHL,            &LDEA,
     // 6X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &LDHB,             &LDHC,             &LDHD,             &LDHE,
+    &LDHH,             &LDHL,             &LDHHL,            &LDHA,
+    &LDLB,             &LDLC,             &LDLD,             &LDLE,
+    &LDLH,             &LDLL,             &LDLHL,            &LDLA,
     // 7X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &LDHLB,            &LDHLC,            &LDHLD,            &LDHLE,
+    &LDHLH,            &LDHLL,            &STOP,             &LDHLA,
+    &LDAB,             &LDAC,             &LDAD,             &LDAE,
+    &LDAH,             &LDAL,             &LDAHL,            &LDAA,
     // 8X
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -84,14 +84,14 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // EX
-    &STOP,             &STOP,             &LDHCA,            &STOP,
+    &LDHnA,            &STOP,             &LDHCA,            &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &LDnnA,            &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // FX
+    &LDHAn,            &STOP,             &LDHAC,            &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &EI,
+    &STOP,             &STOP,             &LDAnn,            &EI,
     &STOP,             &STOP,             &STOP,             &STOP
 };
 
