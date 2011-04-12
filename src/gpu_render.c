@@ -35,16 +35,20 @@ void render_scanline()
     Word map_offset = isset_flag(BG_TILE_MAP) ? 0x1C00 : 0x1800;
     
     // Determine line of tiles we're currently using
-    map_offset += (gpu.regs.line + gpu.regs.scrolly) >> 3;
+    map_offset += (((LINE + SCROLLY) & 0xFF) >> 3) << 5;
 
     // Determine which tile in the line to start with
-    Byte line_offset = gpu.regs.scrollx >> 3;
+    Byte line_offset = SCROLLX >> 3;
 
     // Determine tile pixel offsets
     Byte tile_x = SCROLLX & 0xF;
     Byte tile_y = (LINE + SCROLLY) & 0xF;
 
+    printf("GET_TILE: %04X\n", map_offset + line_offset);
+
     Byte *tile = get_tile(map_offset + line_offset);
+
+    printf("SHOW_TILE: %02X\n", gpu.vram[map_offset + line_offset]);
 
     SDL_LockSurface(gpu.screen);
 
@@ -60,6 +64,8 @@ void render_scanline()
             line_offset = (line_offset + 1) & 0x1F;
             tile = get_tile(map_offset + line_offset);
         }
+
+        ++pixel;
     }
 
     SDL_UnlockSurface(gpu.screen);
@@ -85,24 +91,24 @@ void draw_pixel(const Byte *tile, Byte x, Byte y, uint32_t *pixel)
                   ((row[1] & (0x80 >> x)) ? 0x02 : 0);
 
     // Translate via background palette
-    colour = (PALETTE & (0x02 << colour)) >> colour;
+    colour = (PALETTE & (0x03 << colour)) >> colour;
 
     switch (colour)
     {
         case 0:
-            *pixel = 0xFFFFFFFF;
+            *pixel = SDL_MapRGBA(gpu.screen->format, 0xFF, 0xFF, 0xFF, 0xFF);
             break;
 
         case 1:
-            *pixel = 0xC0C0C0C0;
+            *pixel = SDL_MapRGBA(gpu.screen->format, 0xC0, 0xC0, 0xC0, 0xFF);
             break;
 
         case 2:
-            *pixel = 0x60606060;
+            *pixel = SDL_MapRGBA(gpu.screen->format, 0x60, 0x60, 0x60, 0xFF);
             break;
 
         case 3:
-            *pixel = 0x00000000;
+            *pixel = SDL_MapRGBA(gpu.screen->format, 0x00, 0x00, 0x00, 0xFF);
             break;
     }
 }

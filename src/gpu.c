@@ -109,6 +109,7 @@ void gpu_step(Word ticks)
                 if (gpu.regs.line == 143)
                 {
                     gpu.mode = VBLANK_MODE;
+                    printf("SDL_FLIP\n");
                     SDL_Flip(gpu.screen);
                 }
                 else
