@@ -180,6 +180,7 @@ void mmu_putbyte(Word addr, Byte value)
         // Graphics: VRAM (8k)
         case 0x8000:
         case 0x9000:
+            printf("VRAM write: %04X=%02X\n", addr, value);
             gpu.vram[addr & 0x1FFF] = value;
             break;
 
