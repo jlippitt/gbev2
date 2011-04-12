@@ -14,6 +14,12 @@ void gpu_reset()
         gpu.oam[i] = 0;
     }
 
-    gpu.screen = SDL_SetVideoMode(160, 144, 0, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    gpu.screen = SDL_SetVideoMode(160, 144, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+
+    SDL_Rect rect = {0, 0, 160, 144};
+
+    SDL_FillRect(gpu.screen, &rect, 0xFFFFFFFF);
+
+    SDL_Flip(gpu.screen);
 }
 
