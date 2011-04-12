@@ -17,7 +17,7 @@ static void (*ops[])() = {
     &NOP,              &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &LDCn,             &STOP,
+    &INCC,             &STOP,             &LDCn,             &STOP,
     // 1X
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
@@ -84,7 +84,7 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // EX
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &LDHCA,            &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,

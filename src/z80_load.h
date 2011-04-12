@@ -14,6 +14,13 @@ void LD##r1##n() \
 DEF_LDrn(A);
 DEF_LDrn(C);
 
+void LDHCA()
+{
+    debug("LD ($FF00+C),A");
+    mmu_putbyte(0xFF00 + C, A);
+    tick(8);
+}
+
 void LDHLnn()
 {
     debug("LD HL,nn");

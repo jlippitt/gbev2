@@ -10,4 +10,14 @@ void XORA()
     tick(4);
 }
 
+void INCC()
+{
+    debug("INC C");
+    C++;
+    alter_flag(ZERO, C);
+    reset_flag(NEGATIVE);
+    alter_flag(HALF_CARRY, (C & 0xF) == 0);
+    tick(4);
+}
+
 #endif
