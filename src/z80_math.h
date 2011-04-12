@@ -209,6 +209,150 @@ void SBCAn()
     tick(8);
 }
 
+// AND r1 with A
+
+#define DEF_ANDAr(r1) \
+void ANDA##r1() \
+{ \
+    debug("AND A," #r1); \
+    A &= r1; \
+    alter_flag(ZERO, A == 0); \
+    reset_flag(NEGATIVE); \
+    set_flag(HALF_CARRY); \
+    reset_flag(CARRY); \
+    tick(4); \
+}
+
+DEF_ANDAr(A);
+DEF_ANDAr(B);
+DEF_ANDAr(C);
+DEF_ANDAr(D);
+DEF_ANDAr(E);
+DEF_ANDAr(H);
+DEF_ANDAr(L);
+
+// AND A with (HL)
+
+void ANDAHL()
+{
+    debug("AND A,(HL)");
+    A &= mmu_getbyte(HL);
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
+    set_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(8);
+}
+
+// AND A with n
+
+void ANDAn()
+{
+    debug("AND A,n");
+    A &= next_byte();
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
+    set_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(8);
+}
+
+// OR r1 with A
+
+#define DEF_ORAr(r1) \
+void ORA##r1() \
+{ \
+    debug("OR A," #r1); \
+    A |= r1; \
+    alter_flag(ZERO, A == 0); \
+    reset_flag(NEGATIVE); \
+    reset_flag(HALF_CARRY); \
+    reset_flag(CARRY); \
+    tick(4); \
+}
+
+DEF_ORAr(A);
+DEF_ORAr(B);
+DEF_ORAr(C);
+DEF_ORAr(D);
+DEF_ORAr(E);
+DEF_ORAr(H);
+DEF_ORAr(L);
+
+// OR A with (HL)
+
+void ORAHL()
+{
+    debug("OR A,(HL)");
+    A |= mmu_getbyte(HL);
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(8);
+}
+
+// OR A with n
+
+void ORAn()
+{
+    debug("OR A,n");
+    A |= next_byte();
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(8);
+}
+
+// XOR r1 with A
+
+#define DEF_XORAr(r1) \
+void XORA##r1() \
+{ \
+    debug("XOR A," #r1); \
+    A ^= r1; \
+    alter_flag(ZERO, A == 0); \
+    reset_flag(NEGATIVE); \
+    reset_flag(HALF_CARRY); \
+    reset_flag(CARRY); \
+    tick(4); \
+}
+
+DEF_XORAr(A);
+DEF_XORAr(B);
+DEF_XORAr(C);
+DEF_XORAr(D);
+DEF_XORAr(E);
+DEF_XORAr(H);
+DEF_XORAr(L);
+
+// XOR A with (HL)
+
+void XORAHL()
+{
+    debug("XOR A,(HL)");
+    A ^= mmu_getbyte(HL);
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(8);
+}
+
+// XOR A with n
+
+void XORAn()
+{
+    debug("XOR A,n");
+    A ^= next_byte();
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(8);
+}
+
 void XORA()
 {
     debug("XOR A");

@@ -64,13 +64,13 @@ static void (*ops[])() = {
     &SBCAB,            &SBCAC,            &SBCAD,            &SBCAE,
     &SBCAH,            &SBCAL,            &SBCAHL,           &SBCAA,
     // AX
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &XORA,
+    &ANDAB,            &ANDAC,            &ANDAD,            &ANDAE,
+    &ANDAH,            &ANDAL,            &ANDAHL,           &ANDAA,
+    &XORAB,            &XORAC,            &XORAD,            &XORAE,
+    &XORAH,            &XORAL,            &XORAHL,           &XORAA,
     // BX
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &ORAB,             &ORAC,             &ORAD,             &ORAE,
+    &ORAH,             &ORAL,             &ORAHL,            &ORAA,
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
     // CX
@@ -85,12 +85,12 @@ static void (*ops[])() = {
     &STOP,             &STOP,             &SBCAn,            &STOP,
     // EX
     &LDHnA,            &POPHL,            &LDHCA,            &STOP,
-    &STOP,             &PUSHHL,           &STOP,             &STOP,
+    &STOP,             &PUSHHL,           &ANDAn,            &STOP,
     &STOP,             &STOP,             &LDnnA,            &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &STOP,             &STOP,             &XORAn,            &STOP,
     // FX
     &LDHAn,            &POPAF,            &LDHAC,            &STOP,
-    &STOP,             &PUSHAF,           &STOP,             &STOP,
+    &STOP,             &PUSHAF,           &ORAn,             &STOP,
     &LDHLSPn,          &LDSPHL,           &LDAnn,            &EI,
     &STOP,             &STOP,             &STOP,             &STOP
 };
