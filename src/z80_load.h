@@ -195,7 +195,7 @@ void LDDHLA()
 
 void LDIAHL()
 {
-    debug("LDD A,(HL)");
+    debug("LDI A,(HL)");
     A = mmu_getbyte(HL++);
     tick(8);
 }
@@ -204,7 +204,7 @@ void LDIAHL()
 
 void LDIHLA()
 {
-    debug("LDD (HL),A");
+    debug("LDI (HL),A");
     mmu_putbyte(HL++, A);
     tick(8);
 }
