@@ -21,17 +21,17 @@ static void (*ops[])() = {
     // 1X
     &STOP,             &LDDEnn,           &LDDEA,            &INCDE,
     &INCD,             &DECD,             &LDDn,             &STOP,
-    &STOP,             &ADDHLDE,          &LDADE,            &DECDE,
+    &JRn,              &ADDHLDE,          &LDADE,            &DECDE,
     &INCE,             &DECE,             &LDEn,             &STOP,
     // 2X
     &JRNZn,            &LDHLnn,           &LDIHLA,           &INCHL,
     &INCH,             &DECH,             &LDHn,             &STOP,
-    &STOP,             &ADDHLHL,          &LDIAHL,           &DECHL,
+    &JRZn,             &ADDHLHL,          &LDIAHL,           &DECHL,
     &INCL,             &DECL,             &LDLn,             &STOP,
     // 3X
-    &STOP,             &LDSPnn,           &LDDHLA,           &INCSP,
+    &JRNCn,            &LDSPnn,           &LDDHLA,           &INCSP,
     &INCHLm,           &DECHLm,           &LDHLn,            &STOP,
-    &STOP,             &ADDHLSP,          &LDDAHL,           &DECSP,
+    &JRCn,             &ADDHLSP,          &LDDAHL,           &DECSP,
     &INCA,             &DECA,             &LDAn,             &STOP,
     // 4X
     &LDBB,             &LDBC,             &LDBD,             &LDBE,
@@ -74,25 +74,25 @@ static void (*ops[])() = {
     &CPAB,             &CPAC,             &CPAD,             &CPAE,
     &CPAH,             &CPAL,             &CPAHL,            &CPAA,
     // CX
-    &STOP,             &POPBC,            &STOP,             &STOP,
-    &STOP,             &PUSHBC,           &ADDAn,            &STOP,
-    &STOP,             &STOP,             &STOP,             &ext_op,
-    &STOP,             &CALLnn,           &ADCAn,            &STOP,
+    &RETNZ,            &POPBC,            &JPNZnn,           &JPnn,
+    &CALLNZnn,         &PUSHBC,           &ADDAn,            &RST00,
+    &RETZ,             &RET,              &JPZnn,            &ext_op,
+    &CALLZnn,          &CALLnn,           &ADCAn,            &RST08,
     // DX
-    &STOP,             &POPDE,            &STOP,             &STOP,
-    &STOP,             &PUSHDE,           &SUBAn,            &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &SBCAn,            &STOP,
+    &RETNC,            &POPDE,            &JPNCnn,           &STOP,
+    &CALLNCnn,         &PUSHDE,           &SUBAn,            &RST10,
+    &RETC,             &RETI,             &JPCnn,            &STOP,
+    &CALLCnn,          &STOP,             &SBCAn,            &RST18,
     // EX
     &LDHnA,            &POPHL,            &LDHCA,            &STOP,
-    &STOP,             &PUSHHL,           &ANDAn,            &STOP,
-    &ADDSPn,           &STOP,             &LDnnA,            &STOP,
-    &STOP,             &STOP,             &XORAn,            &STOP,
+    &STOP,             &PUSHHL,           &ANDAn,            &RST20,
+    &ADDSPn,           &JPHL,             &LDnnA,            &STOP,
+    &STOP,             &STOP,             &XORAn,            &RST28,
     // FX
     &LDHAn,            &POPAF,            &LDHAC,            &STOP,
-    &STOP,             &PUSHAF,           &ORAn,             &STOP,
+    &STOP,             &PUSHAF,           &ORAn,             &RST30,
     &LDHLSPn,          &LDSPHL,           &LDAnn,            &EI,
-    &STOP,             &STOP,             &CPAn,             &STOP
+    &STOP,             &STOP,             &CPAn,             &RST38
 };
 
 static void (*ext_ops[])() = {
