@@ -52,10 +52,10 @@ Byte gpu_getbyte(Word addr)
             return gpu.regs.control;
 
         case 0xFF42:
-            return gpu.regs.scrollx;
+            return gpu.regs.scrolly;
 
         case 0xFF43:
-            return gpu.regs.scrolly;
+            return gpu.regs.scrollx;
 
         case 0xFF44:
             return gpu.regs.line;
@@ -74,11 +74,11 @@ void gpu_putbyte(Word addr, Byte value)
             break;
 
         case 0xFF42:
-            gpu.regs.scrollx = value;
+            gpu.regs.scrolly = value;
             break;
 
         case 0xFF43:
-            gpu.regs.scrolly = value;
+            gpu.regs.scrollx = value;
             break;
 
         case 0xFF47:

@@ -48,7 +48,9 @@ static inline void debug(const char *format, ...)
 
 static inline Byte next_byte()
 {
-    return mmu_getbyte(PC++);
+    Byte tmp = mmu_getbyte(PC);
+    PC++;
+    return tmp;
 }
 
 static inline Word next_word()
