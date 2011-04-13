@@ -70,20 +70,20 @@ void gpu_putbyte(Word addr, Byte value)
     switch (addr)
     {
         case 0xFF40:
-            printf("CTL: %02X\n", value);
             gpu.regs.control = value;
+            break;
 
         case 0xFF42:
-            printf("SCX: %02X\n", value);
             gpu.regs.scrollx = value;
+            break;
 
         case 0xFF43:
-            printf("SCY: %02X\n", value);
             gpu.regs.scrolly = value;
+            break;
 
         case 0xFF47:
-            printf("BGP: %02X\n", value);
             gpu.regs.palette = value;
+            break;
     }
 }
 
