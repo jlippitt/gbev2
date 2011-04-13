@@ -82,8 +82,8 @@ void gpu_step(Word ticks)
         case OAM_MODE:
             if (gpu.modeclock >= 80)
             {
-                gpu.modeclock = 0;
                 gpu.mode = VRAM_MODE;
+                gpu.modeclock = 0;
             }
             break;
 
@@ -92,10 +92,10 @@ void gpu_step(Word ticks)
         case VRAM_MODE:
             if (gpu.modeclock >= 172)
             {
-                gpu.modeclock = 0;
-                gpu.mode = HBLANK_MODE;
-
                 render_scanline();
+
+                gpu.mode = HBLANK_MODE;
+                gpu.modeclock = 0;
             }
             break;
 
@@ -103,19 +103,22 @@ void gpu_step(Word ticks)
         case HBLANK_MODE:
             if (gpu.modeclock >= 204)
             {
-                gpu.modeclock = 0;
-                gpu.regs.line++;
-
                 if (gpu.regs.line == 143)
                 {
-                    gpu.mode = VBLANK_MODE;
+                    // Update screen when scanner reaches end of last line
                     printf("SDL_FLIP\n");
                     SDL_Flip(gpu.screen);
+
+                    gpu.mode = VBLANK_MODE;
+                    gpu.modeclock = 0;
                 }
                 else
                 {
                     gpu.mode = OAM_MODE;
+                    gpu.modeclock = 0;
                 }
+
+                gpu.regs.line++;
             }
             break;
 
@@ -123,14 +126,17 @@ void gpu_step(Word ticks)
         case VBLANK_MODE:
             if (gpu.modeclock >= 456)
             {
-                gpu.modeclock = 0;
-                gpu.regs.line++;
-
-                if (gpu.regs.line > 153)
+                if (gpu.regs.line == 153)
                 {
-                    // Restart scanning modes
-                    gpu.mode = OAM_MODE;
+                    // Restart scan
                     gpu.regs.line = 0;
+                    gpu.mode = OAM_MODE;
+                    gpu.modeclock = 0;
+                }
+                else
+                {
+                    gpu.regs.line++;
+                    gpu.modeclock = 0;
                 }
             }
             break;
