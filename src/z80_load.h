@@ -277,7 +277,7 @@ void LDnnSP()
 {
     Word tmp = next_word();
     debug("LD ($%04X),SP", tmp);
-    mmu_putbyte(tmp, SP);
+    mmu_putword(tmp, SP);
     tick(20);
 }
 
