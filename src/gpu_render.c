@@ -40,7 +40,7 @@ void render_scanline()
 
     // Determine position to start from on background map
     Byte bg_x = SCROLLX;
-    Byte bg_y = LINE + SCROLLY;
+    Byte bg_y = SCROLLY + LINE;
     
     // Determine line of tiles we're currently using
     map_offset += bg_y / TILE_SIZE * MAP_SIZE;
@@ -91,8 +91,8 @@ void draw_pixel(const Byte *tile, Byte x, Byte y, uint32_t *pixel)
 {
     tile += 2 * y;
 
-    Byte colour = ((tile[0] & (0x80 >> x)) ? 0x02 : 0) +
-                  ((tile[1] & (0x80 >> x)) ? 0x01 : 0);
+    Byte colour = ((tile[0] & (1 << (7 - x))) ? 0x02 : 0) +
+                  ((tile[1] & (1 << (7 - x))) ? 0x01 : 0);
 
     // Translate via background palette
     colour = (PALETTE & (0x03 << (colour * 2))) >> (colour * 2);

@@ -34,12 +34,14 @@
 
 static inline void debug(const char *format, ...)
 {
+    /*
     va_list args;
     printf(": ");
     va_start(args, format);
     vprintf(format, args);
     va_end(args);
     printf("\n");
+    */
 }
 
 // Immediate values (from ROM)

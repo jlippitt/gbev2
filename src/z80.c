@@ -203,7 +203,7 @@ void z80_doframe()
     {
         Byte op = next_byte();
 
-        printf("%02X", op);
+        //printf("%02X", op);
 
         (*ops[op])();
 
@@ -211,13 +211,13 @@ void z80_doframe()
 
         gpu_step(z80.regs.t);
 
-        printf("AF=%04X ", AF);
-        printf("BC=%04X ", BC);
-        printf("DE=%04X ", DE);
-        printf("HL=%04X ", HL);
-        printf("PC=%04X ", PC);
-        printf("SP=%04X ", SP);
-        printf("T=%d\n", z80.clock.t);
+        //printf("AF=%04X ", AF);
+        //printf("BC=%04X ", BC);
+        //printf("DE=%04X ", DE);
+        //printf("HL=%04X ", HL);
+        //printf("PC=%04X ", PC);
+        //printf("SP=%04X ", SP);
+        //printf("T=%d\n", z80.clock.t);
     }
     while (z80.clock.t < frame_time);
 }
@@ -226,7 +226,7 @@ void ext_op()
 {
     Byte op = next_byte();
 
-    printf("%02X", op);
+    //printf("%02X", op);
 
     (*ext_ops[op])();
 }
