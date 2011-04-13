@@ -1,3 +1,5 @@
+#include <assert.h>
+#include <stdbool.h>
 #include "gpu.h"
 #include "gpu_render.h"
 
@@ -7,6 +9,8 @@ void gpu_reset()
 {
     gpu.screen = SDL_SetVideoMode(DISPLAY_WIDTH, DISPLAY_HEIGHT, 32,
             SDL_HWSURFACE | SDL_DOUBLEBUF);
+
+    assert(gpu.screen != NULL);
 
     gpu.mode = HBLANK_MODE;
     gpu.modeclock = 0;
@@ -30,8 +34,12 @@ void gpu_reset()
     // Blank the screen
     SDL_Rect rect = {0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT};
 
+    SDL_LockSurface(gpu.screen);
+
     SDL_FillRect(gpu.screen, &rect,
             SDL_MapRGBA(gpu.screen->format, 0xFF, 0xFF, 0xFF, 0xFF));
+
+    SDL_UnlockSurface(gpu.screen);
 
     SDL_Flip(gpu.screen);
 }
@@ -142,6 +150,9 @@ void gpu_step(Word ticks)
                 }
             }
             break;
+
+        default:
+            assert(false);
     }
 }
 
