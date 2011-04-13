@@ -25,7 +25,8 @@ extern struct Z80
         union Z80_WordReg hl;
         Word pc;
         Word sp;
-        Word t;
+        Byte ime;
+        Byte t;
     }
     regs;
 

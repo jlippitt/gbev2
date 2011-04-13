@@ -95,7 +95,7 @@ void STOP()
 void DI()
 {
     debug("DI");
-    // TODO
+    z80.regs.ime = 0;
     tick(4);
 }
 
@@ -104,7 +104,7 @@ void DI()
 void EI()
 {
     debug("EI");
-    // TODO
+    z80.regs.ime = 1;
     tick(4);
 }
 

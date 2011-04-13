@@ -159,6 +159,7 @@ Byte mmu_getbyte(Word addr)
                 case 0xF00:
                     if (addr == 0xFFFF)
                     {
+                        printf("Read IE\n");
                         return mmu.ienable;
                     }
                     else if (addr >= 0xFF80)
@@ -251,6 +252,7 @@ void mmu_putbyte(Word addr, Byte value)
                 case 0xF00:
                     if (addr == 0xFFFF)
                     {
+                        printf("Write IE: %02X\n", value);
                         mmu.ienable = value;
                     }
                     if (addr >= 0xFF80)

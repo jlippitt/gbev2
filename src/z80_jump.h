@@ -246,6 +246,11 @@ DEF_RSTn(20);
 DEF_RSTn(28);
 DEF_RSTn(30);
 DEF_RSTn(38);
+DEF_RSTn(40);
+DEF_RSTn(48);
+DEF_RSTn(50);
+DEF_RSTn(58);
+DEF_RSTn(60);
 
 // Return
 
@@ -318,7 +323,7 @@ void RETI()
 {
     debug("RETI");
     PC = pop();
-    // TODO: Enable interrupts
+    z80.regs.ime = 1;
     tick(8);
 }
 

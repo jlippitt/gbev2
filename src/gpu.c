@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "gpu.h"
 #include "gpu_render.h"
+#include "mmu.h"
 
 struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0}};
 
@@ -125,6 +126,8 @@ void gpu_step(Word ticks)
 
                     gpu.mode = VBLANK_MODE;
                     gpu.modeclock = 0;
+
+                    mmu.iflag |= INT_VBLANK;
                 }
                 else
                 {
