@@ -3,6 +3,43 @@
 
 #include "z80_macros.h"
 
+// Swap upper and lower nibbles of r1
+
+#define DEF_SWAPr(r1) \
+void SWAP##r1() \
+{ \
+    debug("SWAP " #r1); \
+    r1 = (r1 << 4) + (r1 >> 4); \
+    alter_flag(ZERO, r1 == 0); \
+    reset_flag(NEGATIVE); \
+    reset_flag(HALF_CARRY); \
+    reset_flag(CARRY); \
+    tick(8); \
+}
+
+DEF_SWAPr(A);
+DEF_SWAPr(B);
+DEF_SWAPr(C);
+DEF_SWAPr(D);
+DEF_SWAPr(E);
+DEF_SWAPr(H);
+DEF_SWAPr(L);
+
+// Swap upper and lower nibbles of (HL)
+
+void SWAPHL()
+{
+    debug("SWAP (HL)");
+    Byte tmp = mmu_getbyte(HL);
+    tmp = (tmp << 4) + (tmp >> 4);
+    mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    reset_flag(CARRY);
+    tick(16);
+}
+
 // Rotate A left
 
 void RLCA()
