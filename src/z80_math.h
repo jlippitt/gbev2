@@ -502,14 +502,13 @@ DEF_ADDHLr(SP);
 
 void ADDSPn()
 {
-    Byte tmp = next_byte(); \
+    Byte tmp = next_byte();
     debug("ADD SP,%d", (int8_t)tmp);
-    int32_t result = SP + (int8_t)tmp; \
-    SP = result & 0x0000FFFF; \
+    SP = SP + (int8_t)tmp;
     reset_flag(ZERO);
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, ((SP & 0xF) + (tmp & 0xF)) > 0xF);
-    alter_flag(CARRY, result < 0 || result > 0xFFFF);
+    alter_flag(CARRY, ((SP & 0xFF) + (tmp & 0xF)) > 0xFF);
     tick(16);
 }
 

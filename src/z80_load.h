@@ -261,14 +261,13 @@ void LDSPHL()
 
 void LDHLSPn()
 {
-    Byte tmp = next_byte(); \
+    Byte tmp = next_byte();
     debug("LD HL,SP+%d", (int8_t)tmp);
-    int32_t result = SP + (int8_t)tmp; \
-    HL = result & 0x0000FFFF; \
+    HL = SP + (int8_t)tmp;
     reset_flag(ZERO);
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, ((SP & 0xF) + (tmp & 0xF)) > 0xF);
-    alter_flag(CARRY, result < 0 || result > 0xFFFF);
+    alter_flag(CARRY, ((SP & 0xFF) + (tmp & 0xF)) > 0xFF);
     tick(12);
 }
 
