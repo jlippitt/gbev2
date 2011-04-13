@@ -142,10 +142,6 @@ void gpu_step(Word ticks)
                 }
             }
             break;
-
-        default:
-            // Nothing
-            break;
     }
 }
 

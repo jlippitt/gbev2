@@ -124,7 +124,7 @@ Byte mmu_getbyte(Word addr)
             return mmu.wram[addr & 0x1FFF];
 
         // Working RAM shadow, I/O, Zero-page RAM
-        default:
+        case 0xF000:
             switch (addr & 0x0F00)
             {
                 case 0x000: case 0x100: case 0x200: case 0x300:
@@ -146,7 +146,7 @@ Byte mmu_getbyte(Word addr)
                     }
 
                 // Zero-page
-                default:
+                case 0xF00:
                     if (addr >= 0xFF80)
                     {
                         return mmu.zram[addr & 0x7F];
@@ -158,6 +158,8 @@ Byte mmu_getbyte(Word addr)
                     }
             }
     }
+
+    return 0;
 }
 
 Word mmu_getword(Word addr)
@@ -210,7 +212,7 @@ void mmu_putbyte(Word addr, Byte value)
             break;
 
         // Working RAM shadow, I/O, Zero-page RAM
-        default:
+        case 0xF000:
             switch (addr & 0x0F00)
             {
                 case 0x000: case 0x100: case 0x200: case 0x300:
@@ -230,7 +232,7 @@ void mmu_putbyte(Word addr, Byte value)
                     break;
 
                 // Zero-page
-                default:
+                case 0xF00:
                     if (addr >= 0xFF80)
                     {
                         mmu.zram[addr & 0x7F] = value;
