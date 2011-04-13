@@ -31,12 +31,14 @@ extern struct Z80
 
     struct
     {
-        Word t;
+        uint32_t t;
     }
     clock;
 }
 z80;
 
-void z80_execute();
+void z80_reset();
+
+void z80_doframe();
 
 #endif

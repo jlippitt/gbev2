@@ -182,11 +182,24 @@ static void (*ext_ops[])() = {
     &SET7H,            &SET7L,            &SET7HL,           &SET7A
 };
 
-void z80_execute()
+void z80_reset()
 {
-    bool running;
+    z80.regs.af.word = 0;
+    z80.regs.bc.word = 0;
+    z80.regs.de.word = 0;
+    z80.regs.hl.word = 0;
+    z80.regs.pc = 0;
+    z80.regs.sp = 0;
+    z80.regs.t  = 0;
 
-    while (running)
+    z80.clock.t = 0;
+}
+
+void z80_doframe()
+{
+    uint32_t frame_time = z80.clock.t + 70244;
+
+    do
     {
         Byte op = next_byte();
 
@@ -205,18 +218,8 @@ void z80_execute()
         printf("PC=%04X ", PC);
         printf("SP=%04X ", SP);
         printf("T=%d\n", z80.clock.t);
-
-        SDL_Event event;
-
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_QUIT)
-            {
-                running = false;
-                break;
-            }
-        }
     }
+    while (z80.clock.t < frame_time);
 }
 
 void ext_op()
