@@ -179,22 +179,15 @@ void mmu_putbyte(Word addr, Byte value)
 {
     switch (addr & 0xF000)
     {
-        // ROM0 (16k)
+        // ROM (read only)
         case 0x0000:
         case 0x1000:
         case 0x2000:
         case 0x3000:
-            assert(mmu.rom != NULL);
-            mmu.rom[addr] = value;
-            break;
-
-        // ROM1 (unbanked) (16k)
         case 0x4000:
         case 0x5000:
         case 0x6000:
         case 0x7000:
-            assert(mmu.rom != NULL);
-            mmu.rom[addr] = value;
             break;
 
         // Graphics: VRAM (8k)
