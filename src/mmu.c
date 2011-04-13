@@ -133,10 +133,11 @@ Byte mmu_getbyte(Word addr)
         case 0xE000:
             return mmu.wram[addr & 0x1FFF];
 
-        // Working RAM shadow, I/O, Zero-page RAM
+        // Everthing else
         case 0xF000:
             switch (addr & 0x0F00)
             {
+                // Working RAM shadow
                 case 0x000: case 0x100: case 0x200: case 0x300:
                 case 0x400: case 0x500: case 0x600: case 0x700:
                 case 0x800: case 0x900: case 0xA00: case 0xB00:
@@ -155,25 +156,35 @@ Byte mmu_getbyte(Word addr)
                         return 0;
                     }
 
-                // Zero-page
+                // Zero-page RAM, I/O, Interrupts
                 case 0xF00:
                     if (addr == 0xFFFF)
                     {
+                        // Interrupt enable/disable
                         printf("Read IE\n");
                         return mmu.ienable;
                     }
                     else if (addr >= 0xFF80)
                     {
+                        // Zero-page RAM
                         return mmu.zram[addr & 0x7F];
                     }
-                    else if (addr == 0xFF0F)
+                    else if (addr >= 0xFF40)
                     {
-                        return mmu.iflag;
+                        // GPU registers
+                        return gpu_getbyte(addr);
                     }
                     else
                     {
-                        // I/O control handling
-                        return gpu_getbyte(addr);
+                        switch (addr)
+                        {
+                            // Interrupt flag
+                            case 0xFF0F:
+                                return mmu.iflag;
+
+                            default:
+                                return 0;
+                        }
                     }
             }
 
@@ -228,10 +239,11 @@ void mmu_putbyte(Word addr, Byte value)
             mmu.wram[addr & 0x1FFF] = value;
             break;
 
-        // Working RAM shadow, I/O, Zero-page RAM
+        // Everything else
         case 0xF000:
             switch (addr & 0x0F00)
             {
+                // Working RAM shadow
                 case 0x000: case 0x100: case 0x200: case 0x300:
                 case 0x400: case 0x500: case 0x600: case 0x700:
                 case 0x800: case 0x900: case 0xA00: case 0xB00:
@@ -248,25 +260,33 @@ void mmu_putbyte(Word addr, Byte value)
                     }
                     break;
 
-                // Zero-page
+                // Zero-page RAM, Interrupts, I/O
                 case 0xF00:
                     if (addr == 0xFFFF)
                     {
+                        // Interrupt enable/disable
                         printf("Write IE: %02X\n", value);
                         mmu.ienable = value;
                     }
                     if (addr >= 0xFF80)
                     {
+                        // Zero page RAM
                         mmu.zram[addr & 0x7F] = value;
+                    }
+                    else if (addr >= 0xFF40)
+                    {
+                        // GPU registers
+                        gpu_putbyte(addr, value);
                     }
                     else if (addr == 0xFF0F)
                     {
-                        mmu.iflag = value;
-                    }
-                    else
-                    {
-                        // I/O control handling
-                        gpu_putbyte(addr, value);
+                        switch (addr)
+                        {
+                            case 0xFF0F:
+                                // Interrupt flag
+                                mmu.iflag = value;
+                                break;
+                        }
                     }
                     break;
 
