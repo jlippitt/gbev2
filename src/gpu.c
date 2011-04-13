@@ -70,15 +70,19 @@ void gpu_putbyte(Word addr, Byte value)
     switch (addr)
     {
         case 0xFF40:
+            printf("CTL: %02X\n", value);
             gpu.regs.control = value;
 
         case 0xFF42:
+            printf("SCX: %02X\n", value);
             gpu.regs.scrollx = value;
 
         case 0xFF43:
+            printf("SCY: %02X\n", value);
             gpu.regs.scrolly = value;
 
         case 0xFF47:
+            printf("BGP: %02X\n", value);
             gpu.regs.palette = value;
     }
 }
@@ -114,7 +118,7 @@ void gpu_step(Word ticks)
         case HBLANK_MODE:
             if (gpu.modeclock >= 204)
             {
-                if (gpu.regs.line == DISPLAY_HEIGHT)
+                if (gpu.regs.line == (DISPLAY_HEIGHT - 1))
                 {
                     // Update screen when scanner reaches end of last line
                     SDL_Flip(gpu.screen);
@@ -136,7 +140,7 @@ void gpu_step(Word ticks)
         case VBLANK_MODE:
             if (gpu.modeclock >= 456)
             {
-                if (gpu.regs.line == (DISPLAY_HEIGHT + 10))
+                if (gpu.regs.line == (DISPLAY_HEIGHT + 9))
                 {
                     // Restart scan
                     gpu.regs.line = 0;
