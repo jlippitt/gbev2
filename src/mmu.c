@@ -1,3 +1,5 @@
+#include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "gpu.h"
@@ -89,12 +91,14 @@ Byte mmu_getbyte(Word addr)
                 }
             }
 
+            assert(mmu.rom != NULL);
             return mmu.rom[addr];
 
         // ROM0
         case 0x1000:
         case 0x2000:
         case 0x3000:
+            assert(mmu.rom != NULL);
             return mmu.rom[addr];
 
         // ROM1 (unbanked) (16k)
@@ -102,6 +106,7 @@ Byte mmu_getbyte(Word addr)
         case 0x5000:
         case 0x6000:
         case 0x7000:
+            assert(mmu.rom != NULL);
             return mmu.rom[addr];
 
         // Graphics: VRAM (8k)
@@ -157,9 +162,12 @@ Byte mmu_getbyte(Word addr)
                         return gpu_getbyte(addr);
                     }
             }
+
+        default:
+            assert(false);
+            return 0;
     }
 
-    return 0;
 }
 
 Word mmu_getword(Word addr)
@@ -176,6 +184,7 @@ void mmu_putbyte(Word addr, Byte value)
         case 0x1000:
         case 0x2000:
         case 0x3000:
+            assert(mmu.rom != NULL);
             mmu.rom[addr] = value;
             break;
 
@@ -184,6 +193,7 @@ void mmu_putbyte(Word addr, Byte value)
         case 0x5000:
         case 0x6000:
         case 0x7000:
+            assert(mmu.rom != NULL);
             mmu.rom[addr] = value;
             break;
 
@@ -242,7 +252,15 @@ void mmu_putbyte(Word addr, Byte value)
                         // I/O control handling
                         gpu_putbyte(addr, value);
                     }
+                    break;
+
+                default:
+                    assert(false);
             }
+            break;
+
+        default:
+            assert(false);
     }
 }
 
