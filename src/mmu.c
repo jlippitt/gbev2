@@ -165,7 +165,7 @@ Byte mmu_getbyte(Word addr)
                     {
                         return mmu.zram[addr & 0x7F];
                     }
-                    else if (addr == 0x00F0)
+                    else if (addr == 0xFF0F)
                     {
                         return mmu.iflag;
                     }
@@ -257,7 +257,7 @@ void mmu_putbyte(Word addr, Byte value)
                     {
                         mmu.zram[addr & 0x7F] = value;
                     }
-                    else if (addr == 0x00F0)
+                    else if (addr == 0xFF0F)
                     {
                         mmu.iflag = value;
                     }
