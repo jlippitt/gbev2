@@ -112,7 +112,7 @@ void EI()
 
 void XX()
 {
-    fprintf(stderr, "Operation not implemented");
+    fprintf(stderr, "Operation not implemented: %02X\n", mmu_getbyte(PC - 1));
     exit(1);
 }
 
