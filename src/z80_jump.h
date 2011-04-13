@@ -7,7 +7,7 @@
 
 void JPnn()
 {
-    Byte tmp = next_word();
+    Word tmp = next_word();
     debug("JP $%04X", tmp);
     PC = tmp;
     tick(12);
@@ -17,7 +17,7 @@ void JPnn()
 
 void JPNZnn()
 {
-    Byte tmp = next_word();
+    Word tmp = next_word();
     debug("JP NZ,$%04X", tmp);
 
     if (!isset_flag(ZERO))
@@ -32,7 +32,7 @@ void JPNZnn()
 
 void JPZnn()
 {
-    Byte tmp = next_word();
+    Word tmp = next_word();
     debug("JP Z,$%04X", tmp);
 
     if (isset_flag(ZERO))
@@ -47,7 +47,7 @@ void JPZnn()
 
 void JPNCnn()
 {
-    Byte tmp = next_word();
+    Word tmp = next_word();
     debug("JP NC,$%04X", tmp);
 
     if (!isset_flag(CARRY))
@@ -62,7 +62,7 @@ void JPNCnn()
 
 void JPCnn()
 {
-    Byte tmp = next_word();
+    Word tmp = next_word();
     debug("JP C,$%04X", tmp);
 
     if (isset_flag(CARRY))
