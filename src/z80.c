@@ -111,15 +111,15 @@ static void (*ext_ops[])() = {
     &RRrB,             &RRrC,             &RRrD,             &RRrE,
     &RRrH,             &RRrL,             &RRHL,             &RRrA,
     // CB2X
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &SLAB,             &SLAC,             &SLAD,             &SLAE,
+    &SLAH,             &SLAL,             &SLAHL,            &SLAA,
+    &SRAB,             &SRAC,             &SRAD,             &SRAE,
+    &SRAH,             &SRAL,             &SRAHL,            &SRAA,
     // CB3X
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
-    &STOP,             &STOP,             &STOP,             &STOP,
+    &SRLB,             &SRLC,             &SRLD,             &SRLE,
+    &SRLH,             &SRLL,             &SRLHL,            &SRLA,
     // CB4X
     &STOP,             &STOP,             &STOP,             &STOP,
     &STOP,             &STOP,             &STOP,             &STOP,

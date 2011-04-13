@@ -90,8 +90,8 @@ void RLCHL()
     Byte tmp = mmu_getbyte(HL);
     Byte carry = tmp & 0x80;
     tmp = (tmp << 1) + (carry ? 1 : 0);
-    alter_flag(ZERO, tmp == 0);
     mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
@@ -129,8 +129,8 @@ void RLHL()
     Byte tmp = mmu_getbyte(HL);
     Byte carry = tmp & 0x80;
     tmp = (tmp << 1) + isset_flag(CARRY);
-    alter_flag(ZERO, tmp == 0);
     mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
@@ -168,8 +168,8 @@ void RRCHL()
     Byte tmp = mmu_getbyte(HL);
     Byte carry = tmp & 1;
     tmp = (tmp >> 1) + (carry ? 0x80 : 0);
-    alter_flag(ZERO, tmp == 0);
     mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
@@ -207,11 +207,122 @@ void RRHL()
     Byte tmp = mmu_getbyte(HL);
     Byte carry = tmp & 1;
     tmp = (tmp >> 1) + (isset_flag(CARRY) ? 0x80 : 0);
-    alter_flag(ZERO, tmp == 0);
     mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
+    tick(16);
+}
+
+// Shift A left, LSB set to 0
+
+#define DEF_SLAr(r1) \
+void SLA##r1() \
+{ \
+    debug("SLA " #r1); \
+    alter_flag(CARRY, r1 & 0x80); \
+    r1 <<= 1; \
+    alter_flag(ZERO, r1 == 0); \
+    reset_flag(NEGATIVE); \
+    reset_flag(HALF_CARRY); \
+    tick(8); \
+}
+
+DEF_SLAr(A);
+DEF_SLAr(B);
+DEF_SLAr(C);
+DEF_SLAr(D);
+DEF_SLAr(E);
+DEF_SLAr(H);
+DEF_SLAr(L);
+
+// Shift (HL) left, LSB set to 0
+
+void SLAHL()
+{
+    debug("SLA (HL)");
+    Byte tmp = mmu_getbyte(HL);
+    alter_flag(CARRY, tmp & 0x80);
+    tmp <<= 1;
+    mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    tick(16);
+}
+
+// Shift A right, MSB doesn't change
+
+#define DEF_SRAr(r1) \
+void SRA##r1() \
+{ \
+    debug("SRA " #r1); \
+    alter_flag(CARRY, r1 & 1); \
+    r1 = (r1 & 0x80) + (r1 >> 1); \
+    alter_flag(ZERO, r1 == 0); \
+    reset_flag(NEGATIVE); \
+    reset_flag(HALF_CARRY); \
+    tick(8); \
+}
+
+DEF_SRAr(A);
+DEF_SRAr(B);
+DEF_SRAr(C);
+DEF_SRAr(D);
+DEF_SRAr(E);
+DEF_SRAr(H);
+DEF_SRAr(L);
+
+// Shift (HL) right, MSB doesn't change
+
+void SRAHL()
+{
+    debug("SRA (HL)");
+    Byte tmp = mmu_getbyte(HL);
+    alter_flag(CARRY, tmp & 1);
+    tmp = (tmp & 0x80) + (tmp >> 1);
+    mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
+    tick(16);
+}
+
+// Shift A right, MSB set to 0
+
+#define DEF_SRLr(r1) \
+void SRL##r1() \
+{ \
+    debug("SRL " #r1); \
+    alter_flag(CARRY, r1 & 1); \
+    r1 >>= 1; \
+    alter_flag(ZERO, r1 == 0); \
+    reset_flag(NEGATIVE); \
+    reset_flag(HALF_CARRY); \
+    tick(8); \
+}
+
+DEF_SRLr(A);
+DEF_SRLr(B);
+DEF_SRLr(C);
+DEF_SRLr(D);
+DEF_SRLr(E);
+DEF_SRLr(H);
+DEF_SRLr(L);
+
+// Shift (HL) right, MSB set to 0
+
+void SRLHL()
+{
+    debug("SRL (HL)");
+    Byte tmp = mmu_getbyte(HL);
+    alter_flag(CARRY, tmp & 1);
+    tmp >>= 1;
+    mmu_putbyte(HL, tmp);
+    alter_flag(ZERO, tmp == 0);
+    reset_flag(NEGATIVE);
+    reset_flag(HALF_CARRY);
     tick(16);
 }
 
