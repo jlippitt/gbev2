@@ -2,6 +2,7 @@
 #include <SDL/SDL.h>
 #include "gbe.h"
 #include "gpu.h"
+#include "joypad.h"
 #include "mmu.h"
 #include "z80.h"
 
@@ -25,9 +26,19 @@ void gbe_run()
 
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_QUIT)
+            switch (event.type)
             {
-                running = false;
+                case SDL_KEYDOWN:
+                    joypad_keydown(event.key.keysym.sym);
+                    break;
+
+                case SDL_KEYUP:
+                    joypad_keyup(event.key.keysym.sym);
+                    break;
+
+                case SDL_QUIT:
+                    running = false;
+                    break;
             }
         }
     }

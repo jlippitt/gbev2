@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "gpu.h"
+#include "joypad.h"
 #include "mmu.h"
 #include "z80.h"
 
@@ -178,6 +179,10 @@ Byte mmu_getbyte(Word addr)
                     {
                         switch (addr)
                         {
+                            // Joypad register
+                            case 0xFF00:
+                                return joypad_getbyte();
+
                             // Interrupt flag
                             case 0xFF0F:
                                 return mmu.iflag;
@@ -278,10 +283,15 @@ void mmu_putbyte(Word addr, Byte value)
                         // GPU registers
                         gpu_putbyte(addr, value);
                     }
-                    else if (addr == 0xFF0F)
+                    else
                     {
                         switch (addr)
                         {
+                            case 0xFF00:
+                                // Joypad register
+                                joypad_putbyte(value);
+                                break;
+
                             case 0xFF0F:
                                 // Interrupt flag
                                 mmu.iflag = value;
