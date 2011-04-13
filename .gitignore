@@ -1,6 +1,5 @@
 *.exe
 *.o
 *.swp
-*.gb
 *.txt
-*.zip
+roms/
