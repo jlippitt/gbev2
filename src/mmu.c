@@ -25,6 +25,7 @@ struct MMU mmu = {
      0x21, 0x04, 0x01, 0x11, 0xA8, 0x00, 0x1A, 0x13, 0xBE, 0x20, 0xFE, 0x23, 0x7D, 0xFE, 0x34, 0x20,
      0xF5, 0x06, 0x19, 0x78, 0x86, 0x23, 0x05, 0x20, 0xFB, 0x86, 0x20, 0xFE, 0x3E, 0x01, 0xE0, 0x50},
     NULL,
+    0,
     0
 };
 
@@ -35,7 +36,8 @@ void mmu_reset()
     free(mmu.rom);
     mmu.rom = NULL;
 
-    mmu.ie = 0;
+    mmu.ienable = 0;
+    mmu.iflag   = 0;
 
     for (Word i = 0; i < WRAM_SIZE; i++)
     {
@@ -157,11 +159,15 @@ Byte mmu_getbyte(Word addr)
                 case 0xF00:
                     if (addr == 0xFFFF)
                     {
-                        return mmu.ie;
+                        return mmu.ienable;
                     }
                     else if (addr >= 0xFF80)
                     {
                         return mmu.zram[addr & 0x7F];
+                    }
+                    else if (addr == 0x00F0)
+                    {
+                        return mmu.iflag;
                     }
                     else
                     {
@@ -245,11 +251,15 @@ void mmu_putbyte(Word addr, Byte value)
                 case 0xF00:
                     if (addr == 0xFFFF)
                     {
-                        mmu.ie = value;
+                        mmu.ienable = value;
                     }
                     if (addr >= 0xFF80)
                     {
                         mmu.zram[addr & 0x7F] = value;
+                    }
+                    else if (addr == 0x00F0)
+                    {
+                        mmu.iflag = value;
                     }
                     else
                     {

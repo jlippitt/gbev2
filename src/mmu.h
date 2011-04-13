@@ -13,7 +13,8 @@ extern struct MMU
     bool in_bios;
     Byte bios[256];
     Byte *rom;
-    Byte ie;
+    Byte ienable;
+    Byte iflag;
     Byte wram[WRAM_SIZE];
     Byte eram[ERAM_SIZE];
     Byte zram[ZRAM_SIZE];
