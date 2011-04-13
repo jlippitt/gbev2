@@ -29,14 +29,14 @@ static void (*ops[])() = {
     &INCE,             &DECE,             &LDEn,             &RRA,
     // 2X
     &JRNZn,            &LDHLnn,           &LDIHLA,           &INCHL,
-    &INCH,             &DECH,             &LDHn,             &STOP,
+    &INCH,             &DECH,             &LDHn,             &DAA,
     &JRZn,             &ADDHLHL,          &LDIAHL,           &DECHL,
-    &INCL,             &DECL,             &LDLn,             &STOP,
+    &INCL,             &DECL,             &LDLn,             &CPL,
     // 3X
     &JRNCn,            &LDSPnn,           &LDDHLA,           &INCSP,
-    &INCHLm,           &DECHLm,           &LDHLn,            &STOP,
+    &INCHLm,           &DECHLm,           &LDHLn,            &SCF,
     &JRCn,             &ADDHLSP,          &LDDAHL,           &DECSP,
-    &INCA,             &DECA,             &LDAn,             &STOP,
+    &INCA,             &DECA,             &LDAn,             &CCF,
     // 4X
     &LDBB,             &LDBC,             &LDBD,             &LDBE,
     &LDBH,             &LDBL,             &LDBHL,            &LDBA,
@@ -54,7 +54,7 @@ static void (*ops[])() = {
     &LDLH,             &LDLL,             &LDLHL,            &LDLA,
     // 7X
     &LDHLB,            &LDHLC,            &LDHLD,            &LDHLE,
-    &LDHLH,            &LDHLL,            &STOP,             &LDHLA,
+    &LDHLH,            &LDHLL,            &HALT,             &LDHLA,
     &LDAB,             &LDAC,             &LDAD,             &LDAE,
     &LDAH,             &LDAL,             &LDAHL,            &LDAA,
     // 8X
@@ -83,20 +83,20 @@ static void (*ops[])() = {
     &RETZ,             &RET,              &JPZnn,            &ext_op,
     &CALLZnn,          &CALLnn,           &ADCAn,            &RST08,
     // DX
-    &RETNC,            &POPDE,            &JPNCnn,           &STOP,
+    &RETNC,            &POPDE,            &JPNCnn,           &XX,
     &CALLNCnn,         &PUSHDE,           &SUBAn,            &RST10,
-    &RETC,             &RETI,             &JPCnn,            &STOP,
-    &CALLCnn,          &STOP,             &SBCAn,            &RST18,
+    &RETC,             &RETI,             &JPCnn,            &XX,
+    &CALLCnn,          &XX,               &SBCAn,            &RST18,
     // EX
-    &LDHnA,            &POPHL,            &LDHCA,            &STOP,
-    &STOP,             &PUSHHL,           &ANDAn,            &RST20,
-    &ADDSPn,           &JPHL,             &LDnnA,            &STOP,
-    &STOP,             &STOP,             &XORAn,            &RST28,
+    &LDHnA,            &POPHL,            &LDHCA,            &XX,
+    &XX,               &PUSHHL,           &ANDAn,            &RST20,
+    &ADDSPn,           &JPHL,             &LDnnA,            &XX,
+    &XX,               &XX,               &XORAn,            &RST28,
     // FX
-    &LDHAn,            &POPAF,            &LDHAC,            &STOP,
-    &STOP,             &PUSHAF,           &ORAn,             &RST30,
+    &LDHAn,            &POPAF,            &LDHAC,            &DI,
+    &XX,               &PUSHAF,           &ORAn,             &RST30,
     &LDHLSPn,          &LDSPHL,           &LDAnn,            &EI,
-    &STOP,             &STOP,             &CPAn,             &RST38
+    &XX,               &XX,               &CPAn,             &RST38
 };
 
 static void (*ext_ops[])() = {
