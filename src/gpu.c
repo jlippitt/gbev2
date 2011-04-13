@@ -1,10 +1,22 @@
 #include "gpu.h"
 #include "gpu_render.h"
 
-struct GPU gpu = {NULL, 0, 0, {0, 0, 0, 0, 0}};
+struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0}};
 
 void gpu_reset()
 {
+    gpu.screen = SDL_SetVideoMode(DISPLAY_WIDTH, DISPLAY_HEIGHT, 32,
+            SDL_HWSURFACE | SDL_DOUBLEBUF);
+
+    gpu.mode = HBLANK_MODE;
+    gpu.modeclock = 0;
+
+    gpu.regs.control = 0;
+    gpu.regs.scrollx = 0;
+    gpu.regs.scrolly = 0;
+    gpu.regs.line    = 0;
+    gpu.regs.palette = 0;
+
     for (Word i = 0; i < VRAM_SIZE; i++)
     {
         gpu.vram[i] = 0;
@@ -15,22 +27,13 @@ void gpu_reset()
         gpu.oam[i] = 0;
     }
 
-    gpu.screen = SDL_SetVideoMode(160, 144, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
+    // Blank the screen
+    SDL_Rect rect = {0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT};
 
-    SDL_Rect rect = {0, 0, 160, 144};
-
-    SDL_FillRect(gpu.screen, &rect, 0xFFFFFFFF);
+    SDL_FillRect(gpu.screen, &rect,
+            SDL_MapRGBA(gpu.screen->format, 0xFF, 0xFF, 0xFF, 0xFF));
 
     SDL_Flip(gpu.screen);
-
-    gpu.mode = 0;
-    gpu.modeclock = 0;
-
-    gpu.regs.control = 0;
-    gpu.regs.scrollx = 0;
-    gpu.regs.scrolly = 0;
-    gpu.regs.line = 0;
-    gpu.regs.palette = 0;
 }
 
 Byte gpu_getbyte(Word addr)
@@ -103,10 +106,9 @@ void gpu_step(Word ticks)
         case HBLANK_MODE:
             if (gpu.modeclock >= 204)
             {
-                if (gpu.regs.line == 143)
+                if (gpu.regs.line == DISPLAY_HEIGHT)
                 {
                     // Update screen when scanner reaches end of last line
-                    printf("SDL_FLIP\n");
                     SDL_Flip(gpu.screen);
 
                     gpu.mode = VBLANK_MODE;
@@ -126,7 +128,7 @@ void gpu_step(Word ticks)
         case VBLANK_MODE:
             if (gpu.modeclock >= 456)
             {
-                if (gpu.regs.line == 153)
+                if (gpu.regs.line == (DISPLAY_HEIGHT + 10))
                 {
                     // Restart scan
                     gpu.regs.line = 0;

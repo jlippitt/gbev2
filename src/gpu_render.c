@@ -21,6 +21,10 @@
 #define WND_TILE_MAP 0x40
 #define DISPLAY      0x80
 
+// Other constants
+#define MAP_SIZE     32
+#define TILE_SIZE    8
+
 static Byte *get_tile(Word map_offset);
 static void draw_pixel(const Byte *tile, Byte x, Byte y, uint32_t *pixel);
 
@@ -33,35 +37,35 @@ void render_scanline()
 {
     // Get starting offset for current tile map
     Word map_offset = isset_flag(BG_TILE_MAP) ? 0x1C00 : 0x1800;
+
+    // Determine position to start from on background map
+    Byte bg_x = SCROLLX;
+    Byte bg_y = LINE + SCROLLY;
     
     // Determine line of tiles we're currently using
-    map_offset += (((LINE + SCROLLY) & 0xFF) >> 3) << 5;
+    map_offset += bg_y / TILE_SIZE * MAP_SIZE;
 
     // Determine which tile in the line to start with
-    Byte line_offset = SCROLLX >> 3;
+    Byte line_offset = bg_x / TILE_SIZE;
 
     // Determine tile pixel offsets
-    Byte tile_x = SCROLLX & 0xF;
-    Byte tile_y = (LINE + SCROLLY) & 0xF;
-
-    printf("GET_TILE: %04X\n", map_offset + line_offset);
+    Byte tile_x = bg_x % TILE_SIZE;
+    Byte tile_y = bg_y % TILE_SIZE;
 
     Byte *tile = get_tile(map_offset + line_offset);
 
-    printf("SHOW_TILE: %02X\n", gpu.vram[map_offset + line_offset]);
-
     SDL_LockSurface(gpu.screen);
 
-    uint32_t *pixel = ((uint32_t *)gpu.screen->pixels) + LINE * 160;
+    uint32_t *pixel = ((uint32_t *)gpu.screen->pixels) + LINE * DISPLAY_WIDTH;
 
-    for (Byte i = 0; i < 160; i++)
+    for (Byte i = 0; i < DISPLAY_WIDTH; i++)
     {
         draw_pixel(tile, tile_x, tile_y, pixel);
 
-        if (++tile_x == 8)
+        if (++tile_x == TILE_SIZE)
         {
             tile_x = 0;
-            line_offset = (line_offset + 1) & 0x1F;
+            line_offset = (line_offset + 1) % MAP_SIZE;
             tile = get_tile(map_offset + line_offset);
         }
 
@@ -75,23 +79,23 @@ Byte *get_tile(Word map_offset)
 {
     if (isset_flag(BG_TILE_SET))
     {
-        return gpu.vram + gpu.vram[map_offset] * 16;
+        return gpu.vram + gpu.vram[map_offset] * 2 * TILE_SIZE;
     }
     else
     {
-        return gpu.vram + 0x1000 + ((int8_t)gpu.vram[map_offset]) * 16;
+        return gpu.vram + 0x1000 + ((int8_t)gpu.vram[map_offset]) * 2 * TILE_SIZE;
     }
 }
 
 void draw_pixel(const Byte *tile, Byte x, Byte y, uint32_t *pixel)
 {
-    const Byte *row = tile + (2 * y);
+    tile += 2 * y;
 
-    Byte colour = ((row[0] & (0x80 >> x)) ? 0x04 : 0) +
-                  ((row[1] & (0x80 >> x)) ? 0x02 : 0);
+    Byte colour = ((tile[0] & (0x80 >> x)) ? 0x02 : 0) +
+                  ((tile[1] & (0x80 >> x)) ? 0x01 : 0);
 
     // Translate via background palette
-    colour = (PALETTE & (0x03 << colour)) >> colour;
+    colour = (PALETTE & (0x03 << (colour * 2))) >> (colour * 2);
 
     switch (colour)
     {

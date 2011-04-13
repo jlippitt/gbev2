@@ -4,6 +4,9 @@
 #include <SDL/SDL.h>
 #include "types.h"
 
+#define DISPLAY_WIDTH  160
+#define DISPLAY_HEIGHT 144
+
 #define VRAM_SIZE 8192
 #define OAM_SIZE  160
 
