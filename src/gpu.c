@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "gpu.h"
 #include "gpu_render.h"
 #include "mmu.h"
@@ -219,5 +220,72 @@ void dma_transfer(Word addr)
             *oam++ = tmp1 & 0xFF00;
         }
     }
+}
+
+void gpu_dump_oam()
+{
+    FILE *fp = fopen("oam.txt", "w");
+
+    Byte *oam = gpu.oam;
+
+    for (int i = 0; i < 40; i++)
+    {
+        fprintf(fp, "0x%04X:\n", i * 4);
+        fprintf(fp, "XPOS=%02X\n", *oam++);
+        fprintf(fp, "YPOS=%02X\n", *oam++);
+        fprintf(fp, "TILE=%02X\n", *oam++);
+        fprintf(fp, "FLAG=%02X\n", *oam++);
+        fprintf(fp, "\n");
+    }
+
+    fclose(fp);
+}
+
+void gpu_dump_vram()
+{
+    FILE *fp = fopen("vram.txt", "w");
+
+    Byte *vram = gpu.vram;
+
+    for (int i = 0; i < 192; i++)
+    {
+        fprintf(fp, "0x%04X:\n", i * 16);
+        
+        for (int j = 0; j < 8; j++)
+        {
+            for (int k = 0; k < 8; k++)
+            {
+                Byte colour = ((vram[0] & (1 << (7 - k))) ? 0x02 : 0) +
+                              ((vram[1] & (1 << (7 - k))) ? 0x01 : 0);
+
+                switch (colour)
+                {
+                    case 0:
+                        fprintf(fp, "0");
+                        break;
+                         
+                    case 1:
+                        fprintf(fp, "1");
+                        break;
+
+                    case 2:
+                        fprintf(fp, "2");
+                        break;
+
+                    case 3:
+                        fprintf(fp, "3");
+                        break;
+                }
+
+                vram += 2;;
+            }
+
+            fprintf(fp, "\n");
+        }
+
+        fprintf(fp, "\n\n");
+    }
+
+    fclose(fp);
 }
 
