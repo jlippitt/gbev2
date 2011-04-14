@@ -492,10 +492,11 @@ void DECHLm()
 void ADDHL##r1() \
 { \
     debug("ADD HL," #r1); \
-    HL += r1; \
+    Byte tmp = r1; \
+    HL += tmp; \
     reset_flag(NEGATIVE); \
-    alter_flag(CARRY, HL < r1); \
-    alter_flag(HALF_CARRY, (HL & 0xFFF) < (r1 & 0xFFF)); \
+    alter_flag(CARRY, HL < tmp); \
+    alter_flag(HALF_CARRY, (HL & 0xFFF) < (tmp & 0xFFF)); \
     tick(8); \
 }
 
