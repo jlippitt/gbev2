@@ -73,12 +73,12 @@ void JPCnn()
     tick(12);
 }
 
-// Jump to (HL)
+// Jump to HL
 
 void JPHL()
 {
     debug("JP (HL)");
-    PC = mmu_getword(HL);
+    PC = HL;
     tick(4);
 }
 
