@@ -8,6 +8,7 @@
 #define SCROLLX      (gpu.regs.scrollx)
 #define SCROLLY      (gpu.regs.scrolly)
 #define LINE         (gpu.regs.line)
+#define RASTER       (gpu.regs.raster)
 #define PAL_BG       (gpu.pal.bg)
 #define PAL_OBJ0     (gpu.pal.obj0)
 #define PAL_OBJ1     (gpu.pal.obj1)

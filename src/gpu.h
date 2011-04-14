@@ -27,6 +27,7 @@ extern struct GPU
         Byte scrollx;
         Byte scrolly;
         Byte line;
+        Byte raster;
     }
     regs;
 

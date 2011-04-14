@@ -20,6 +20,7 @@ void gpu_reset()
     gpu.regs.scrollx = 0;
     gpu.regs.scrolly = 0;
     gpu.regs.line    = 0;
+    gpu.regs.raster  = 0;
 
     gpu.pal.bg   = 0;
     gpu.pal.obj0 = 0;
@@ -55,6 +56,9 @@ Byte gpu_getbyte(Word addr)
         case 0xFF40:
             return gpu.regs.control;
 
+        case 0xFF41:
+            return (gpu.regs.line == gpu.regs.raster ? 0x04 : 0) | gpu.mode;
+
         case 0xFF42:
             return gpu.regs.scrolly;
 
@@ -63,6 +67,9 @@ Byte gpu_getbyte(Word addr)
 
         case 0xFF44:
             return gpu.regs.line;
+
+        case 0xFF45:
+            return gpu.regs.raster;
 
         default:
             return 0;
@@ -83,6 +90,19 @@ void gpu_putbyte(Word addr, Byte value)
 
         case 0xFF43:
             gpu.regs.scrollx = value;
+            break;
+
+        case 0xFF45:
+            gpu.regs.raster = value;
+            break;
+
+        case 0xFF46:
+            // OAM DMA
+            printf("OAM DMA: %02X\n", value);
+            for (Byte i = 0; i < OAM_SIZE; i++)
+            {
+                gpu.oam[i] = mmu_getbyte((value << 8) + i);
+            }
             break;
 
         case 0xFF47:
