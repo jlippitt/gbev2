@@ -13,11 +13,12 @@
 void ADDA##r1() \
 { \
     debug("ADD A," #r1); \
-    A += r1; \
+    Byte tmp = r1; \
+    A += tmp; \
     alter_flag(ZERO, A == 0); \
     reset_flag(NEGATIVE); \
-    alter_flag(HALF_CARRY, (A & 0xF) < (r1 & 0xF)); \
-    alter_flag(CARRY, A < r1); \
+    alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF)); \
+    alter_flag(CARRY, A < tmp); \
     tick(4); \
 }
 
