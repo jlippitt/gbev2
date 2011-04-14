@@ -47,7 +47,7 @@ void RLCA()
     debug("RLCA");
     Byte carry = A & 0x80;
     A = (A << 1) + (carry ? 1 : 0);
-    alter_flag(ZERO, A == 0);
+    reset_flag(ZERO);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
@@ -61,7 +61,7 @@ void RLA()
     debug("RLA");
     Byte carry = A & 0x80;
     A = (A << 1) + isset_flag(CARRY);
-    alter_flag(ZERO, A == 0);
+    reset_flag(ZERO);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
@@ -75,7 +75,7 @@ void RRCA()
     debug("RRCA");
     Byte carry = A & 1;
     A = (A >> 1) + (carry ? 0x80 : 0);
-    alter_flag(ZERO, A == 0);
+    reset_flag(ZERO);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
@@ -89,7 +89,7 @@ void RRA()
     debug("RRA");
     Byte carry = A & 1;
     A = (A >> 1) + (isset_flag(CARRY) ? 0x80 : 0);
-    alter_flag(ZERO, A == 0);
+    reset_flag(ZERO);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
