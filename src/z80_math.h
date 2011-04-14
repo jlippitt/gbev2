@@ -115,11 +115,12 @@ void ADCAn()
 void SUBA##r1() \
 { \
     debug("SUB A," #r1); \
-    A -= r1; \
-    alter_flag(ZERO, A == 0); \
+    Byte result = A - r1; \
+    alter_flag(ZERO, result == 0); \
     set_flag(NEGATIVE); \
-    alter_flag(HALF_CARRY, (A & 0xF) > (r1 & 0xF)); \
-    alter_flag(CARRY, A > r1); \
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF)); \
+    alter_flag(CARRY, result > A); \
+    A = result; \
     tick(4); \
 }
 
@@ -137,11 +138,12 @@ void SUBAHL()
 {
     debug("SUB A,HL");
     Byte tmp = mmu_getbyte(HL);
-    A -= tmp;
-    alter_flag(ZERO, A == 0);
+    Byte result = A - tmp;
+    alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
-    alter_flag(CARRY, A > tmp);
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
+    alter_flag(CARRY, result > A);
+    A = result;
     tick(8);
 }
 
@@ -151,11 +153,12 @@ void SUBAn()
 {
     Byte tmp = next_byte();
     debug("SUB A,$%02X", tmp);
-    A -= tmp;
-    alter_flag(ZERO, A == 0);
+    Byte result = A - tmp;
+    alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
-    alter_flag(CARRY, A > tmp);
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
+    alter_flag(CARRY, result > A);
+    A = result;
     tick(8);
 }
 
@@ -166,11 +169,12 @@ void SBCA##r1() \
 { \
     debug("SBC A," #r1); \
     Byte tmp = r1 + isset_flag(CARRY); \
-    A -= tmp; \
-    alter_flag(ZERO, A == 0); \
+    Byte result = A - tmp; \
+    alter_flag(ZERO, result == 0); \
     set_flag(NEGATIVE); \
-    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF)); \
-    alter_flag(CARRY, A > tmp); \
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF)); \
+    alter_flag(CARRY, result > A); \
+    A = result; \
     tick(4); \
 }
 
@@ -188,11 +192,12 @@ void SBCAHL()
 {
     debug("SBC A,HL");
     Byte tmp = mmu_getbyte(HL) + isset_flag(CARRY);
-    A -= tmp;
-    alter_flag(ZERO, A == 0);
+    Byte result = A - tmp;
+    alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
-    alter_flag(CARRY, A > tmp);
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
+    alter_flag(CARRY, result > A);
+    A = result;
     tick(8);
 }
 
@@ -203,11 +208,12 @@ void SBCAn()
     Byte tmp = next_byte();
     debug("SBC A,$%02X", tmp);
     tmp += isset_flag(CARRY);
-    A -= tmp;
-    alter_flag(ZERO, A == 0);
+    Byte result = A - tmp;
+    alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (A & 0xF) > (tmp & 0xF));
-    alter_flag(CARRY, A > tmp);
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
+    alter_flag(CARRY, result > A);
+    A = result;
     tick(8);
 }
 
@@ -367,8 +373,8 @@ void CPA##r1() \
     Byte result = A - r1; \
     alter_flag(ZERO, result == 0); \
     set_flag(NEGATIVE); \
-    alter_flag(HALF_CARRY, (result & 0xF) > (r1 & 0xF)); \
-    alter_flag(CARRY, result > r1); \
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF)); \
+    alter_flag(CARRY, result > A); \
     tick(4); \
 }
 
@@ -389,8 +395,8 @@ void CPAHL()
     Byte result = A - tmp;
     alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (result & 0xF) > (tmp & 0xF));
-    alter_flag(CARRY, result > tmp);
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
+    alter_flag(CARRY, result > A);
     tick(8);
 }
 
@@ -403,8 +409,8 @@ void CPAn()
     Byte result = A - tmp;
     alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    alter_flag(HALF_CARRY, (result & 0xF) > (tmp & 0xF));
-    alter_flag(CARRY, result > tmp);
+    alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
+    alter_flag(CARRY, result > A);
     tick(8);
 }
 
