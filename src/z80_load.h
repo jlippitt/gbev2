@@ -267,7 +267,7 @@ void LDHLSPn()
     reset_flag(ZERO);
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, ((SP & 0xF) + (tmp & 0xF)) > 0xF);
-    alter_flag(CARRY, ((SP & 0xFF) + (tmp & 0xF)) > 0xFF);
+    alter_flag(CARRY, ((SP & 0xFF) + (tmp & 0xFF)) > 0xFF);
     tick(12);
 }
 
