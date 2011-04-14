@@ -35,6 +35,8 @@ extern struct Z80
         uint32_t t;
     }
     clock;
+
+    Byte halt;
 }
 z80;
 

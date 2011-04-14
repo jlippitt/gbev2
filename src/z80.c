@@ -12,7 +12,7 @@
 #include "z80_misc.h"
 #include "z80_shift.h"
 
-struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0, 0}, {0}};
+struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0, 0}, {0}, 0};
 
 static void ext_op();
 
@@ -193,6 +193,8 @@ void z80_reset()
     z80.regs.t  = 0;
 
     z80.clock.t = 0;
+
+    z80.halt = 0;
 }
 
 void z80_doframe()
@@ -201,14 +203,23 @@ void z80_doframe()
 
     do
     {
-        Byte op = next_byte();
+        if (z80.halt)
+        {
+            z80.regs.t = 4;
+        }
+        else
+        {
+            Byte op = next_byte();
 
-        //printf("%02X", op);
+            //printf("%02X", op);
 
-        (*ops[op])();
+            (*ops[op])();
+        }
 
         if (z80.regs.ime && mmu.ienable)
         {
+            z80.halt = 0;
+
             Byte ifired = mmu.ienable & mmu.iflag;
 
             if (ifired & INT_VBLANK)

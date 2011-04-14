@@ -77,7 +77,7 @@ void NOP()
 void HALT()
 {
     debug("HALT");
-    // TODO
+    z80.halt = 1;
     tick(4);
 }
 
