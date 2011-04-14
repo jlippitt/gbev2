@@ -4,6 +4,8 @@
 #include "gpu_render.h"
 #include "mmu.h"
 
+static void dma_transfer(Word addr);
+
 struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0}, {0, 0, 0}};
 
 void gpu_reset()
@@ -97,12 +99,7 @@ void gpu_putbyte(Word addr, Byte value)
             break;
 
         case 0xFF46:
-            // OAM DMA
-            printf("OAM DMA: %02X\n", value);
-            for (Byte i = 0; i < OAM_SIZE; i++)
-            {
-                gpu.oam[i] = mmu_getbyte((value << 8) + i);
-            }
+            dma_transfer(value << 8);
             break;
 
         case 0xFF47:
@@ -191,6 +188,37 @@ void gpu_step(Word ticks)
 
         default:
             assert(false);
+    }
+}
+
+void dma_transfer(Word addr)
+{
+    // OAM DMA
+    printf("OAM DMA: %04X\n", addr);
+    Byte *oam = gpu.oam;
+    Byte tmp1, tmp2;
+    for (Byte i = 0; i < 40; i++)
+    {
+        if (i & 1)
+        {
+            // Starts half way through a byte
+            tmp2 = mmu_getbyte(addr++);
+            *oam++ = (tmp1 << 8) + (tmp2 >> 8);
+            tmp1 = mmu_getbyte(addr++);
+            *oam++ = (tmp2 << 8) + (tmp1 >> 8);
+            tmp2 = mmu_getbyte(addr++);
+            *oam++ = (tmp1 << 8) + (tmp2 >> 8);
+            *oam++ = tmp2 << 8;
+        }
+        else
+        {
+            // Start at beginning of a byte
+            *oam++ = mmu_getbyte(addr++);
+            *oam++ = mmu_getbyte(addr++);
+            *oam++ = mmu_getbyte(addr++);
+            tmp1 = mmu_getbyte(addr++);
+            *oam++ = tmp1 & 0xFF00;
+        }
     }
 }
 
