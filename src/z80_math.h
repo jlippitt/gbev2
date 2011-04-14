@@ -64,12 +64,21 @@ void ADDAn()
 void ADCA##r1() \
 { \
     debug("ADC A," #r1); \
-    Byte tmp = r1 + isset_flag(CARRY); \
+    Byte tmp = r1; \
+    Byte carry = isset_flag(CARRY); \
     A += tmp; \
-    alter_flag(ZERO, A == 0); \
-    reset_flag(NEGATIVE); \
     alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF)); \
     alter_flag(CARRY, A < tmp); \
+    \
+    if (carry) \
+    { \
+        A += carry; \
+        F |= ((A & 0xF) == 0) ? HALF_CARRY : 0; \
+        F |= (A == 0) ? CARRY : 0; \
+    } \
+    \
+    alter_flag(ZERO, A == 0); \
+    reset_flag(NEGATIVE); \
     tick(4); \
 }
 
@@ -86,12 +95,21 @@ DEF_ADCAr(L);
 void ADCAHL()
 {
     debug("ADC A,(HL)");
-    Byte tmp = mmu_getbyte(HL) + isset_flag(CARRY);
+    Byte tmp = mmu_getbyte(HL);
+    Byte carry = isset_flag(CARRY);
     A += tmp; \
-    alter_flag(ZERO, A == 0);
-    reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF));
     alter_flag(CARRY, A < tmp);
+
+    if (carry)
+    {
+        A += carry;
+        F |= ((A & 0xF) == 0) ? HALF_CARRY : 0;
+        F |= (A == 0) ? CARRY : 0;
+    }
+
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
     tick(8);
 }
 
@@ -101,12 +119,20 @@ void ADCAn()
 {
     Byte tmp = next_byte();
     debug("ADC A,$%02X", tmp);
-    tmp += isset_flag(CARRY);
-    A += tmp; \
-    alter_flag(ZERO, A == 0);
-    reset_flag(NEGATIVE);
+    Byte carry = isset_flag(CARRY);
+    A += tmp;
     alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF));
     alter_flag(CARRY, A < tmp);
+
+    if (carry)
+    {
+        A += carry;
+        F |= ((A & 0xF) == 0) ? HALF_CARRY : 0;
+        F |= (A == 0) ? CARRY : 0;
+    }
+
+    alter_flag(ZERO, A == 0);
+    reset_flag(NEGATIVE);
     tick(8);
 }
 
