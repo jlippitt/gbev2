@@ -217,7 +217,7 @@ void dma_transfer(Word addr)
             *oam++ = mmu_getbyte(addr++);
             *oam++ = mmu_getbyte(addr++);
             tmp1 = mmu_getbyte(addr++);
-            *oam++ = tmp1 & 0xFF00;
+            *oam++ = tmp1 & 0xF0;
         }
     }
 }
