@@ -162,7 +162,6 @@ Byte mmu_getbyte(Word addr)
                     if (addr == 0xFFFF)
                     {
                         // Interrupt enable/disable
-                        printf("Read IE\n");
                         return mmu.ienable;
                     }
                     else if (addr >= 0xFF80)
@@ -223,7 +222,6 @@ void mmu_putbyte(Word addr, Byte value)
         // Graphics: VRAM (8k)
         case 0x8000:
         case 0x9000:
-            //printf("VRAM write: %04X=%02X\n", addr, value);
             gpu.vram[addr & 0x1FFF] = value;
             break;
 
@@ -270,7 +268,6 @@ void mmu_putbyte(Word addr, Byte value)
                     if (addr == 0xFFFF)
                     {
                         // Interrupt enable/disable
-                        printf("Write IE: %02X\n", value);
                         mmu.ienable = value;
                     }
                     if (addr >= 0xFF80)
