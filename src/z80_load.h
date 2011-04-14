@@ -306,9 +306,17 @@ void POP##r1() \
     tick(12); \
 }
 
-DEF_POPrr(AF);
 DEF_POPrr(BC);
 DEF_POPrr(DE);
 DEF_POPrr(HL);
+
+// POP AF is a special case - only upper nibble of F popped
+
+void POPAF()
+{
+    debug("POP AF");
+    AF = pop() & 0xFFF0;
+    tick(12);
+}
 
 #endif
