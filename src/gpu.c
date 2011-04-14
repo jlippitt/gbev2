@@ -245,18 +245,20 @@ void gpu_dump_vram()
 {
     FILE *fp = fopen("vram.txt", "w");
 
-    Byte *vram = gpu.vram;
+    int i, j, k;
 
-    for (int i = 0; i < 192; i++)
+    size_t offset = 0;
+
+    for (i = 0; i < 384; i++)
     {
-        fprintf(fp, "0x%04X:\n", i * 16);
+        fprintf(fp, "0x%04X:\n", offset);
         
-        for (int j = 0; j < 8; j++)
+        for (j = 0; j < 8; j++)
         {
-            for (int k = 0; k < 8; k++)
+            for (k = 0; k < 8; k++)
             {
-                Byte colour = ((vram[0] & (1 << (7 - k))) ? 0x02 : 0) +
-                              ((vram[1] & (1 << (7 - k))) ? 0x01 : 0);
+                Byte colour = ((gpu.vram[offset] & (1 << (7 - k))) ? 0x02 : 0) +
+                              ((gpu.vram[offset + 1] & (1 << (7 - k))) ? 0x01 : 0);
 
                 switch (colour)
                 {
@@ -276,14 +278,31 @@ void gpu_dump_vram()
                         fprintf(fp, "3");
                         break;
                 }
+            }
 
-                vram += 2;;
+            offset += 2;;
+
+            fprintf(fp, "\n");
+        }
+
+        fprintf(fp, "\n");
+    }
+
+    for (i = 0; i < 2; i++)
+    {
+        fprintf(fp, "0x%04X:\n", offset);
+
+        for (j = 0; j < 32; j++)
+        {
+            for (k = 0; k < 32; k++)
+            {
+                fprintf(fp, "%02X ", gpu.vram[offset++]);
             }
 
             fprintf(fp, "\n");
         }
 
-        fprintf(fp, "\n\n");
+        fprintf(fp, "\n");
     }
 
     fclose(fp);
