@@ -492,7 +492,7 @@ void DECHLm()
 void ADDHL##r1() \
 { \
     debug("ADD HL," #r1); \
-    Byte tmp = r1; \
+    Word tmp = r1; \
     HL += tmp; \
     reset_flag(NEGATIVE); \
     alter_flag(CARRY, HL < tmp); \
