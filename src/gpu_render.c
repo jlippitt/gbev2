@@ -110,7 +110,7 @@ void render_scanline()
             if (obj_y <= LINE && (obj_y + TILE_SIZE) > LINE)
             {
                 // Determine tile row offset
-                Byte tile_y = (LINE - obj_y) % TILE_SIZE;
+                Byte tile_y = LINE - obj_y;
 
                 if (obj_flags & OBJ_YFLIP)
                 {
@@ -133,7 +133,7 @@ void render_scanline()
                     // - Pixel not be transparent
                     // - If displaying under background,
                     //   background must be transparent
-                    if ((obj_x + i) >= 0 && (obj_x + i) < 160 &&
+                    if ((obj_x + i) >= 0 && (obj_x + i) < DISPLAY_WIDTH &&
                         colour != 0 &&
                         (!isset_flag(BACKGROUND) ||
                          !(obj_flags & OBJ_BELOW_BG) ||
