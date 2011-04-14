@@ -197,7 +197,7 @@ void z80_reset()
 
 void z80_doframe()
 {
-    uint32_t frame_time = z80.clock.t + 70244;
+    uint32_t frame_time = z80.clock.t + 70224;
 
     do
     {
