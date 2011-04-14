@@ -69,6 +69,8 @@ void joypad_keydown(SDLKey key)
         default:
             break;
     }
+
+    mmu.iflag |= INT_JOYPAD;
 }
 
 void joypad_keyup(SDLKey key)
@@ -110,5 +112,7 @@ void joypad_keyup(SDLKey key)
         default:
             break;
     }
+
+    mmu.iflag |= INT_JOYPAD;
 }
 
