@@ -27,9 +27,16 @@ extern struct GPU
         Byte scrollx;
         Byte scrolly;
         Byte line;
-        Byte palette;
     }
     regs;
+
+    struct
+    {
+        Byte bg;
+        Byte obj0;
+        Byte obj1;
+    }
+    pal;
 
     Byte vram[VRAM_SIZE];
     Byte oam[OAM_SIZE];

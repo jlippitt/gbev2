@@ -4,7 +4,7 @@
 #include "gpu_render.h"
 #include "mmu.h"
 
-struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0}};
+struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0}, {0, 0, 0}};
 
 void gpu_reset()
 {
@@ -20,7 +20,10 @@ void gpu_reset()
     gpu.regs.scrollx = 0;
     gpu.regs.scrolly = 0;
     gpu.regs.line    = 0;
-    gpu.regs.palette = 0;
+
+    gpu.pal.bg   = 0;
+    gpu.pal.obj0 = 0;
+    gpu.pal.obj1 = 0;
 
     for (Word i = 0; i < VRAM_SIZE; i++)
     {
@@ -83,7 +86,15 @@ void gpu_putbyte(Word addr, Byte value)
             break;
 
         case 0xFF47:
-            gpu.regs.palette = value;
+            gpu.pal.bg = value;
+            break;
+
+        case 0xFF48:
+            gpu.pal.obj0 = value;
+            break;
+
+        case 0xFF49:
+            gpu.pal.obj1 = value;
             break;
     }
 }
