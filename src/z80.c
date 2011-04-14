@@ -217,29 +217,25 @@ void z80_doframe()
                 z80.regs.ime = 0;
                 RST40();
             }
-
-            if (ifired & INT_LCD_STAT)
+            else if (ifired & INT_LCD_STAT)
             {
                 mmu.iflag &= INT_LCD_STAT;
                 z80.regs.ime = 0;
                 RST48();
             }
-
-            if (ifired & INT_TIMER)
+            else if (ifired & INT_TIMER)
             {
                 mmu.iflag &= INT_TIMER;
                 z80.regs.ime = 0;
                 RST50();
             }
-
-            if (ifired & INT_SERIAL)
+            else if (ifired & INT_SERIAL)
             {
                 mmu.iflag &= INT_SERIAL;
                 z80.regs.ime = 0;
                 RST58();
             }
-
-            if (ifired & INT_JOYPAD)
+            else if (ifired & INT_JOYPAD)
             {
                 mmu.iflag &= INT_JOYPAD;
                 z80.regs.ime = 0;
