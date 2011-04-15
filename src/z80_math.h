@@ -226,7 +226,7 @@ DEF_SBCAr(L);
 void SBCAHL()
 {
     debug("SBC A,HL");
-    Byte carry = isset_flag(carry);
+    Byte carry = isset_flag(CARRY);
     Byte result = A - mmu_getbyte(HL);
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
     alter_flag(CARRY, result > A);
