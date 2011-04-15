@@ -194,31 +194,16 @@ void gpu_step(Word ticks)
 
 void dma_transfer(Word addr)
 {
+    printf("DMA TRANSFER\n");
     // OAM DMA
     Byte *oam = gpu.oam;
-    Byte tmp1, tmp2;
+    //Byte tmp1, tmp2;
     for (Byte i = 0; i < 40; i++)
     {
-        if (i & 1)
-        {
-            // Starts half way through a byte
-            tmp2 = mmu_getbyte(addr++);
-            *oam++ = (tmp1 << 8) + (tmp2 >> 8);
-            tmp1 = mmu_getbyte(addr++);
-            *oam++ = (tmp2 << 8) + (tmp1 >> 8);
-            tmp2 = mmu_getbyte(addr++);
-            *oam++ = (tmp1 << 8) + (tmp2 >> 8);
-            *oam++ = tmp2 << 8;
-        }
-        else
-        {
-            // Start at beginning of a byte
-            *oam++ = mmu_getbyte(addr++);
-            *oam++ = mmu_getbyte(addr++);
-            *oam++ = mmu_getbyte(addr++);
-            tmp1 = mmu_getbyte(addr++);
-            *oam++ = tmp1 & 0xF0;
-        }
+        *oam++ = mmu_getbyte(addr++);
+        *oam++ = mmu_getbyte(addr++);
+        *oam++ = mmu_getbyte(addr++);
+        *oam++ = mmu_getbyte(addr++);
     }
 }
 
