@@ -204,7 +204,7 @@ void z80_reset()
 void z80_doframe()
 {
     uint32_t frame_time = z80.clock.m + 17556;
-    uint32_t sdl_frame_ticks = SDL_GetTicks() + (17556 * 4 / CLOCK_SPEED) + 1;
+    uint32_t sdl_frame_ticks = SDL_GetTicks() + 1000 / (CLOCK_SPEED / (17556 * 4));
 
     do
     {
