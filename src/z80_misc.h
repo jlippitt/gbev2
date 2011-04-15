@@ -11,19 +11,39 @@ void DAA()
 {
     debug("DAA");
 
-    if ((A & 0xF) > 0x9 || isset_flag(HALF_CARRY))
+    if (isset_flag(NEGATIVE))
     {
-        A += 0x6;
-    }
+        if ((A & 0xF) > 0x9 || isset_flag(HALF_CARRY))
+        {
+            A -= 0x6;
+        }
 
-    if ((A & 0xF0) > 0x90 || isset_flag(CARRY))
-    {
-        A += 0x60;
-        set_flag(CARRY);
+        if ((A & 0xF0) > 0x90 || isset_flag(CARRY))
+        {
+            A -= 0x60;
+            set_flag(CARRY);
+        }
+        else
+        {
+            reset_flag(CARRY);
+        }
     }
     else
     {
-        reset_flag(CARRY);
+        if ((A & 0xF) > 0x9 || isset_flag(HALF_CARRY))
+        {
+            A += 0x6;
+        }
+
+        if ((A & 0xF0) > 0x90 || isset_flag(CARRY))
+        {
+            A += 0x60;
+            set_flag(CARRY);
+        }
+        else
+        {
+            reset_flag(CARRY);
+        }
     }
 
     alter_flag(ZERO, A == 0);
