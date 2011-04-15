@@ -19,7 +19,7 @@ void ADDA##r1() \
     reset_flag(NEGATIVE); \
     alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF)); \
     alter_flag(CARRY, A < tmp); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_ADDAr(A);
@@ -41,7 +41,7 @@ void ADDAHL()
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF));
     alter_flag(CARRY, A < tmp);
-    tick(8);
+    tick(2);
 }
 
 // ADD n to A
@@ -55,7 +55,7 @@ void ADDAn()
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (A & 0xF) < (tmp & 0xF));
     alter_flag(CARRY, A < tmp);
-    tick(8);
+    tick(2);
 }
 
 // Add r1 + carry to A
@@ -79,7 +79,7 @@ void ADCA##r1() \
     \
     alter_flag(ZERO, A == 0); \
     reset_flag(NEGATIVE); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_ADCAr(A);
@@ -110,7 +110,7 @@ void ADCAHL()
 
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
-    tick(8);
+    tick(2);
 }
 
 // ADD n + carry to A
@@ -133,7 +133,7 @@ void ADCAn()
 
     alter_flag(ZERO, A == 0);
     reset_flag(NEGATIVE);
-    tick(8);
+    tick(2);
 }
 
 // Subtract r1 from A
@@ -148,7 +148,7 @@ void SUBA##r1() \
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF)); \
     alter_flag(CARRY, result > A); \
     A = result; \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_SUBAr(A);
@@ -171,7 +171,7 @@ void SUBAHL()
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
     alter_flag(CARRY, result > A);
     A = result;
-    tick(8);
+    tick(2);
 }
 
 // Subtract n from A
@@ -186,7 +186,7 @@ void SUBAn()
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
     alter_flag(CARRY, result > A);
     A = result;
-    tick(8);
+    tick(2);
 }
 
 // Subtract r1 + carry from A
@@ -210,7 +210,7 @@ void SBCA##r1() \
     A = result; \
     alter_flag(ZERO, result == 0); \
     set_flag(NEGATIVE); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_SBCAr(A);
@@ -241,7 +241,7 @@ void SBCAHL()
     A = result;
     alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    tick(8);
+    tick(2);
 }
 
 // Subtract n + carry from A
@@ -265,7 +265,7 @@ void SBCAn()
     A = result;
     alter_flag(ZERO, result == 0);
     set_flag(NEGATIVE);
-    tick(8);
+    tick(2);
 }
 
 // AND r1 with A
@@ -279,7 +279,7 @@ void ANDA##r1() \
     reset_flag(NEGATIVE); \
     set_flag(HALF_CARRY); \
     reset_flag(CARRY); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_ANDAr(A);
@@ -300,7 +300,7 @@ void ANDAHL()
     reset_flag(NEGATIVE);
     set_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(8);
+    tick(2);
 }
 
 // AND A with n
@@ -314,7 +314,7 @@ void ANDAn()
     reset_flag(NEGATIVE);
     set_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(8);
+    tick(2);
 }
 
 // OR r1 with A
@@ -328,7 +328,7 @@ void ORA##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     reset_flag(CARRY); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_ORAr(A);
@@ -349,7 +349,7 @@ void ORAHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(8);
+    tick(2);
 }
 
 // OR A with n
@@ -363,7 +363,7 @@ void ORAn()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(8);
+    tick(2);
 }
 
 // XOR r1 with A
@@ -377,7 +377,7 @@ void XORA##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     reset_flag(CARRY); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_XORAr(A);
@@ -398,7 +398,7 @@ void XORAHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(8);
+    tick(2);
 }
 
 // XOR A with n
@@ -412,7 +412,7 @@ void XORAn()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(8);
+    tick(2);
 }
 
 // Compare r1 with A
@@ -426,7 +426,7 @@ void CPA##r1() \
     set_flag(NEGATIVE); \
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF)); \
     alter_flag(CARRY, result > A); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_CPAr(A);
@@ -448,7 +448,7 @@ void CPAHL()
     set_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
     alter_flag(CARRY, result > A);
-    tick(8);
+    tick(2);
 }
 
 // Compare n with A
@@ -462,7 +462,7 @@ void CPAn()
     set_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (result & 0xF) > (A & 0xF));
     alter_flag(CARRY, result > A);
-    tick(8);
+    tick(2);
 }
 
 // Increment r1
@@ -475,7 +475,7 @@ void INC##r1() \
     alter_flag(ZERO, r1 == 0); \
     reset_flag(NEGATIVE); \
     alter_flag(HALF_CARRY, (r1 & 0xF) == 0); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_INCr(A);
@@ -496,7 +496,7 @@ void INCHLm()
     alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (tmp & 0xF) == 0);
-    tick(12);
+    tick(3);
 }
 
 // Decrement r1
@@ -509,7 +509,7 @@ void DEC##r1() \
     alter_flag(ZERO, r1 == 0); \
     set_flag(NEGATIVE); \
     alter_flag(HALF_CARRY, (r1 & 0xF) == 0xF); \
-    tick(4); \
+    tick(1); \
 }
 
 DEF_DECr(A);
@@ -530,7 +530,7 @@ void DECHLm()
     alter_flag(ZERO, tmp == 0);
     set_flag(NEGATIVE);
     alter_flag(HALF_CARRY, (tmp & 0xF) == 0xF);
-    tick(12);
+    tick(3);
 }
 
 /*
@@ -548,7 +548,7 @@ void ADDHL##r1() \
     reset_flag(NEGATIVE); \
     alter_flag(CARRY, HL < tmp); \
     alter_flag(HALF_CARRY, (HL & 0xFFF) < (tmp & 0xFFF)); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_ADDHLr(BC);
@@ -568,7 +568,7 @@ void ADDSPn()
     reset_flag(NEGATIVE);
     alter_flag(HALF_CARRY, ((orig & 0xF) + (tmp & 0xF)) > 0xF);
     alter_flag(CARRY, ((orig & 0xFF) + (tmp & 0xFF)) > 0xFF);
-    tick(16);
+    tick(4);
 }
 
 // Increment r1
@@ -578,7 +578,7 @@ void INC##r1() \
 { \
     debug("INC" #r1); \
     r1++; \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_INCrr(BC);
@@ -593,7 +593,7 @@ void DEC##r1() \
 { \
     debug("DEC" #r1); \
     r1--; \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_DECrr(BC);

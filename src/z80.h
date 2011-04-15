@@ -26,13 +26,13 @@ extern struct Z80
         Word pc;
         Word sp;
         Byte ime;
-        Byte t;
+        Byte m;
     }
     regs;
 
     struct
     {
-        uint32_t t;
+        uint32_t m;
     }
     clock;
 

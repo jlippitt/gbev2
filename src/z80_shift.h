@@ -14,7 +14,7 @@ void SWAP##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     reset_flag(CARRY); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_SWAPr(A);
@@ -37,7 +37,7 @@ void SWAPHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     reset_flag(CARRY);
-    tick(16);
+    tick(4);
 }
 
 // Rotate A left
@@ -51,7 +51,7 @@ void RLCA()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(4);
+    tick(1);
 }
 
 // Rotate A left through carry flag
@@ -65,7 +65,7 @@ void RLA()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(4);
+    tick(1);
 }
 
 // Rotate A right
@@ -79,7 +79,7 @@ void RRCA()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(4);
+    tick(1);
 }
 
 // Rotate A right through carry
@@ -93,7 +93,7 @@ void RRA()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(4);
+    tick(1);
 }
 
 // Rotate r1 left
@@ -108,7 +108,7 @@ void RLCr##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     alter_flag(CARRY, carry); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_RLCr(A);
@@ -132,7 +132,7 @@ void RLCHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(16);
+    tick(4);
 }
 
 // Rotate r1 left through carry
@@ -147,7 +147,7 @@ void RLr##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     alter_flag(CARRY, carry); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_RLr(A);
@@ -171,7 +171,7 @@ void RLHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(16);
+    tick(4);
 }
 
 // Rotate r1 right
@@ -186,7 +186,7 @@ void RRCr##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     alter_flag(CARRY, carry); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_RRCr(A);
@@ -210,7 +210,7 @@ void RRCHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(16);
+    tick(4);
 }
 
 // Rotate r1 right through carry
@@ -225,7 +225,7 @@ void RRr##r1() \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
     alter_flag(CARRY, carry); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_RRr(A);
@@ -249,7 +249,7 @@ void RRHL()
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
     alter_flag(CARRY, carry);
-    tick(16);
+    tick(4);
 }
 
 // Shift A left, LSB set to 0
@@ -263,7 +263,7 @@ void SLA##r1() \
     alter_flag(ZERO, r1 == 0); \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_SLAr(A);
@@ -286,7 +286,7 @@ void SLAHL()
     alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
-    tick(16);
+    tick(4);
 }
 
 // Shift A right, MSB doesn't change
@@ -300,7 +300,7 @@ void SRA##r1() \
     alter_flag(ZERO, r1 == 0); \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_SRAr(A);
@@ -323,7 +323,7 @@ void SRAHL()
     alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
-    tick(16);
+    tick(4);
 }
 
 // Shift A right, MSB set to 0
@@ -337,7 +337,7 @@ void SRL##r1() \
     alter_flag(ZERO, r1 == 0); \
     reset_flag(NEGATIVE); \
     reset_flag(HALF_CARRY); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_SRLr(A);
@@ -360,7 +360,7 @@ void SRLHL()
     alter_flag(ZERO, tmp == 0);
     reset_flag(NEGATIVE);
     reset_flag(HALF_CARRY);
-    tick(16);
+    tick(4);
 }
 
 #endif

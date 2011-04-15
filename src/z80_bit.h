@@ -12,7 +12,7 @@ void BIT##n##r1() \
     alter_flag(ZERO, (r1 & (1 << n)) == 0); \
     reset_flag(NEGATIVE); \
     set_flag(HALF_CARRY); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_BITnr(0, A);
@@ -81,7 +81,7 @@ void BIT##n##HL() \
     alter_flag(ZERO, (mmu_getbyte(HL) & (1 << n)) == 0); \
     reset_flag(NEGATIVE); \
     set_flag(HALF_CARRY); \
-    tick(16); \
+    tick(4); \
 }
 
 DEF_BITnHL(0);
@@ -100,7 +100,7 @@ void RES##n##r1() \
 { \
     debug("RES " #n "," #r1); \
     r1 &= ~(1 << n); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_RESnr(0, A);
@@ -167,7 +167,7 @@ void RES##n##HL() \
 { \
     debug("RES " #n ",(HL)"); \
     mmu_putbyte(HL, mmu_getbyte(HL) & ~(1 << n)); \
-    tick(16); \
+    tick(4); \
 }
 
 DEF_RESnHL(0);
@@ -186,7 +186,7 @@ void SET##n##r1() \
 { \
     debug("SET " #n "," #r1); \
     r1 |= (1 << n); \
-    tick(8); \
+    tick(2); \
 }
 
 DEF_SETnr(0, A);
@@ -253,7 +253,7 @@ void SET##n##HL() \
 { \
     debug("SET " #n ",(HL)"); \
     mmu_putbyte(HL, mmu_getbyte(HL) | (1 << n)); \
-    tick(16); \
+    tick(4); \
 }
 
 DEF_SETnHL(0);

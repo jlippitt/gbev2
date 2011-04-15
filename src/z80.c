@@ -190,22 +190,22 @@ void z80_reset()
     z80.regs.hl.word = 0;
     z80.regs.pc = 0;
     z80.regs.sp = 0;
-    z80.regs.t  = 0;
+    z80.regs.m  = 0;
 
-    z80.clock.t = 0;
+    z80.clock.m = 0;
 
     z80.halt = 0;
 }
 
 void z80_doframe()
 {
-    uint32_t frame_time = z80.clock.t + 70224;
+    uint32_t frame_time = z80.clock.m + 17556;
 
     do
     {
         if (z80.halt)
         {
-            z80.regs.t = 4;
+            z80.regs.m = 4;
         }
         else
         {
@@ -259,9 +259,9 @@ void z80_doframe()
             }
         }
 
-        z80.clock.t += z80.regs.t;
+        z80.clock.m += z80.regs.m;
 
-        gpu_step(z80.regs.t);
+        gpu_step(z80.regs.m);
 
         //printf("AF=%04X ", AF);
         //printf("BC=%04X ", BC);
@@ -269,9 +269,9 @@ void z80_doframe()
         //printf("HL=%04X ", HL);
         //printf("PC=%04X ", PC);
         //printf("SP=%04X ", SP);
-        //printf("T=%d\n", z80.clock.t);
+        //printf("T=%d\n", z80.clock.m);
     }
-    while (z80.clock.t < frame_time);
+    while (z80.clock.m < frame_time);
 }
 
 void ext_op()

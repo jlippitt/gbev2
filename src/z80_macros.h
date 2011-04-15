@@ -106,9 +106,9 @@ static inline void alter_flag(Byte flag, bool state)
 
 // CPU clock
 
-static inline void tick(Word n)
+static inline void tick(Byte m)
 {
-    z80.regs.t = n;
+    z80.regs.m = m;
 }
 
 #endif

@@ -10,7 +10,7 @@ void JPnn()
     Word tmp = next_word();
     debug("JP $%04X", tmp);
     PC = tmp;
-    tick(12);
+    tick(3);
 }
 
 // Jump to nn if zero not set
@@ -25,7 +25,7 @@ void JPNZnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Jump to nn if zero set
@@ -40,7 +40,7 @@ void JPZnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Jump to nn if carry not set
@@ -55,7 +55,7 @@ void JPNCnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Jump to nn if carry set
@@ -70,7 +70,7 @@ void JPCnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Jump to HL
@@ -79,7 +79,7 @@ void JPHL()
 {
     debug("JP (HL)");
     PC = HL;
-    tick(4);
+    tick(1);
 }
 
 // Jump to offset n
@@ -89,7 +89,7 @@ void JRn()
     Byte tmp = next_byte();
     debug("JR %d", (int8_t)tmp);
     PC += (int8_t)tmp;
-    tick(8);
+    tick(2);
 }
 
 // Jump to offset n if zero not set
@@ -104,7 +104,7 @@ void JRNZn()
         PC += (int8_t)tmp;
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Jump to offset n if zero set
@@ -119,7 +119,7 @@ void JRZn()
         PC += (int8_t)tmp;
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Jump to offset n if carry not set
@@ -134,7 +134,7 @@ void JRNCn()
         PC += (int8_t)tmp;
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Jump to offset n if carry set
@@ -149,7 +149,7 @@ void JRCn()
         PC += (int8_t)tmp;
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Call nn
@@ -160,7 +160,7 @@ void CALLnn()
     debug("CALL $%04X", tmp);
     push(PC);
     PC = tmp;
-    tick(12);
+    tick(3);
 }
 
 // Call nn if zero not set
@@ -176,7 +176,7 @@ void CALLNZnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Call nn if zero set
@@ -192,7 +192,7 @@ void CALLZnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Call nn if carry not set
@@ -208,7 +208,7 @@ void CALLNCnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Call nn if carry set
@@ -224,7 +224,7 @@ void CALLCnn()
         PC = tmp;
     }
 
-    tick(12);
+    tick(3);
 }
 
 // Restart at offset n
@@ -235,7 +235,7 @@ void RST##n() \
     debug("RST $" #n); \
     push(PC); \
     PC = 0x##n; \
-    tick(32); \
+    tick(8); \
 }
 
 DEF_RSTn(00);
@@ -258,7 +258,7 @@ void RET()
 {
     debug("RET");
     PC = pop();
-    tick(8);
+    tick(2);
 }
 
 // Return if zero not set
@@ -272,7 +272,7 @@ void RETNZ()
         PC = pop();
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Return if zero set
@@ -286,7 +286,7 @@ void RETZ()
         PC = pop();
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Return if carry not set
@@ -300,7 +300,7 @@ void RETNC()
         PC = pop();
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Return if carry set
@@ -314,7 +314,7 @@ void RETC()
         PC = pop();
     }
 
-    tick(8);
+    tick(2);
 }
 
 // Return and enable interrupts
@@ -324,7 +324,7 @@ void RETI()
     debug("RETI");
     PC = pop();
     z80.regs.ime = 1;
-    tick(8);
+    tick(2);
 }
 
 #endif

@@ -125,7 +125,7 @@ void gpu_step(Word ticks)
     {
         // OAM read mode, scanline active
         case OAM_MODE:
-            if (gpu.modeclock >= 80)
+            if (gpu.modeclock >= 20)
             {
                 gpu.mode = VRAM_MODE;
                 gpu.modeclock = 0;
@@ -135,7 +135,7 @@ void gpu_step(Word ticks)
         // VRAM read mode, scanline active
         // Treat end of mode as end of scanline
         case VRAM_MODE:
-            if (gpu.modeclock >= 172)
+            if (gpu.modeclock >= 43)
             {
                 render_scanline();
 
@@ -146,7 +146,7 @@ void gpu_step(Word ticks)
 
         // After last hblank, update the display
         case HBLANK_MODE:
-            if (gpu.modeclock >= 204)
+            if (gpu.modeclock >= 51)
             {
                 if (gpu.regs.line == (DISPLAY_HEIGHT - 1))
                 {
@@ -170,7 +170,7 @@ void gpu_step(Word ticks)
 
         // Vblank (10 lines)
         case VBLANK_MODE:
-            if (gpu.modeclock >= 456)
+            if (gpu.modeclock >= 114)
             {
                 if (gpu.regs.line == (DISPLAY_HEIGHT + 9))
                 {
