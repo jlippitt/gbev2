@@ -23,12 +23,6 @@ mbc;
 
 void mbc_init(Byte cart_type);
 
-void mbc_set_rom_bank(Byte value);
-
-void mbc_set_ram_bank(Byte value);
-
-void mbc_set_ram_state(Byte value);
-
-void mbc_set_mode(Byte value);
+void mbc_putbyte(Word addr, Byte value);
 
 #endif

@@ -219,28 +219,16 @@ void mmu_putbyte(Word addr, Byte value)
 {
     switch (addr & 0xF000)
     {
-        // MBC1: External RAM switch
+        // MBC
         case 0x0000:
         case 0x1000:
-            mbc_set_ram_state(value);
-            break;
-
-        // MBC1: ROM bank
         case 0x2000:
         case 0x3000:
-            mbc_set_rom_bank(value);
-            break;
-
-        // MBC1: RAM bank
         case 0x4000:
         case 0x5000:
-            mbc_set_ram_bank(value);
-            break;
-
-        // MBC1: Mode switch
         case 0x6000:
         case 0x7000:
-            mbc_set_mode(value);
+            mbc_putbyte(addr, value);
             break;
 
         // Graphics: VRAM (8k)
