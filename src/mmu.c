@@ -5,6 +5,7 @@
 #include "gpu.h"
 #include "joypad.h"
 #include "mmu.h"
+#include "timer.h"
 #include "z80.h"
 
 struct MMU mmu = {
@@ -182,6 +183,12 @@ Byte mmu_getbyte(Word addr)
                             case 0xFF00:
                                 return joypad_getbyte();
 
+                            case 0xFF04:
+                            case 0xFF05:
+                            case 0xFF06:
+                            case 0xFF07:
+                                return timer_getbyte(addr);
+
                             // Interrupt flag
                             case 0xFF0F:
                                 return mmu.iflag;
@@ -288,6 +295,13 @@ void mmu_putbyte(Word addr, Byte value)
                             case 0xFF00:
                                 // Joypad register
                                 joypad_putbyte(value);
+                                break;
+
+                            case 0xFF04:
+                            case 0xFF05:
+                            case 0xFF06:
+                            case 0xFF07:
+                                timer_putbyte(addr, value);
                                 break;
 
                             case 0xFF0F:

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <SDL/SDL.h>
 #include "gpu.h"
+#include "timer.h"
 #include "z80.h"
 #include "z80_bit.h"
 #include "z80_jump.h"
@@ -14,9 +15,10 @@
 
 #define CLOCK_SPEED 4194304
 
-struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0, 0}, {0}, 0};
-
 static void ext_op();
+static void interrupt(void (*op)());
+
+struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0, 0}, {0}, 0};
 
 static void (*ops[])() = {
     // 0X
@@ -219,6 +221,10 @@ void z80_doframe()
             (*ops[op])();
         }
 
+        z80.clock.m += z80.regs.m;
+        timer_update(z80.regs.m);
+        gpu_step(z80.regs.m);
+
         if (z80.regs.ime && mmu.ienable)
         {
             z80.halt = 0;
@@ -229,42 +235,33 @@ void z80_doframe()
             {
                 printf("INT_VBLANK\n");
                 mmu.iflag &= ~INT_VBLANK;
-                z80.regs.ime = 0;
-                RST40();
+                interrupt(RST40);
             }
             else if (ifired & INT_LCD_STAT)
             {
                 printf("INT_LCD_STAT\n");
                 mmu.iflag &= ~INT_LCD_STAT;
-                z80.regs.ime = 0;
-                RST48();
+                interrupt(RST48);
             }
             else if (ifired & INT_TIMER)
             {
                 printf("INT_TIMER\n");
                 mmu.iflag &= ~INT_TIMER;
-                z80.regs.ime = 0;
-                RST50();
+                interrupt(RST50);
             }
             else if (ifired & INT_SERIAL)
             {
                 printf("INT_SERIAL\n");
                 mmu.iflag &= ~INT_SERIAL;
-                z80.regs.ime = 0;
-                RST58();
+                interrupt(RST58);
             }
             else if (ifired & INT_JOYPAD)
             {
                 printf("INT_JOYPAD\n");
                 mmu.iflag &= ~INT_JOYPAD;
-                z80.regs.ime = 0;
-                RST60();
+                interrupt(RST60);
             }
         }
-
-        z80.clock.m += z80.regs.m;
-
-        gpu_step(z80.regs.m);
 
         //printf("AF=%04X ", AF);
         //printf("BC=%04X ", BC);
@@ -291,5 +288,14 @@ void ext_op()
     //printf("%02X", op);
 
     (*ext_ops[op])();
+}
+
+void interrupt(void (*op)())
+{
+    z80.regs.ime = 0;
+    op();
+    z80.clock.m += z80.regs.m;
+    timer_update(z80.regs.m);
+    gpu_step(z80.regs.m);
 }
 
