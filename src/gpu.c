@@ -5,9 +5,20 @@
 #include "gpu_render.h"
 #include "mmu.h"
 
+#define STAT_HBLANK      0x08
+#define STAT_VBLANK      0x10
+#define STAT_OAM         0x20
+#define STAT_COINCIDENCE 0x40
+
 static void dma_transfer(Word addr);
 
-struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0}, {0, 0, 0}};
+Byte get_lcd_status();
+
+void set_mode(Byte mode);
+
+void next_line();
+
+struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0, 0}, {0, 0, 0}};
 
 void gpu_reset()
 {
@@ -19,11 +30,12 @@ void gpu_reset()
     gpu.mode = HBLANK_MODE;
     gpu.modeclock = 0;
 
-    gpu.regs.control = 0;
-    gpu.regs.scrollx = 0;
-    gpu.regs.scrolly = 0;
-    gpu.regs.line    = 0;
-    gpu.regs.raster  = 0;
+    gpu.regs.control     = 0;
+    gpu.regs.scrollx     = 0;
+    gpu.regs.scrolly     = 0;
+    gpu.regs.line        = 0;
+    gpu.regs.coincidence = 0;
+    gpu.regs.status      = 0;
 
     gpu.pal.bg   = 0;
     gpu.pal.obj0 = 0;
@@ -60,7 +72,7 @@ Byte gpu_getbyte(Word addr)
             return gpu.regs.control;
 
         case 0xFF41:
-            return (gpu.regs.line == gpu.regs.raster ? 0x04 : 0) | gpu.mode;
+            return get_lcd_status();
 
         case 0xFF42:
             return gpu.regs.scrolly;
@@ -72,7 +84,7 @@ Byte gpu_getbyte(Word addr)
             return gpu.regs.line;
 
         case 0xFF45:
-            return gpu.regs.raster;
+            return gpu.regs.coincidence;
 
         default:
             return 0;
@@ -87,6 +99,9 @@ void gpu_putbyte(Word addr, Byte value)
             gpu.regs.control = value;
             break;
 
+        case 0xFF41:
+            gpu.regs.status = (value & 0x78);
+
         case 0xFF42:
             gpu.regs.scrolly = value;
             break;
@@ -96,7 +111,7 @@ void gpu_putbyte(Word addr, Byte value)
             break;
 
         case 0xFF45:
-            gpu.regs.raster = value;
+            gpu.regs.coincidence = value;
             break;
 
         case 0xFF46:
@@ -127,8 +142,7 @@ void gpu_step(Word ticks)
         case OAM_MODE:
             if (gpu.modeclock >= 20)
             {
-                gpu.mode = VRAM_MODE;
-                gpu.modeclock = 0;
+                set_mode(VRAM_MODE);
             }
             break;
 
@@ -139,8 +153,7 @@ void gpu_step(Word ticks)
             {
                 render_scanline();
 
-                gpu.mode = HBLANK_MODE;
-                gpu.modeclock = 0;
+                set_mode(HBLANK_MODE);
             }
             break;
 
@@ -153,18 +166,16 @@ void gpu_step(Word ticks)
                     // Update screen when scanner reaches end of last line
                     SDL_Flip(gpu.screen);
 
-                    gpu.mode = VBLANK_MODE;
-                    gpu.modeclock = 0;
+                    set_mode(VBLANK_MODE);
 
                     mmu.iflag |= INT_VBLANK;
                 }
                 else
                 {
-                    gpu.mode = OAM_MODE;
-                    gpu.modeclock = 0;
+                    set_mode(OAM_MODE);
                 }
 
-                gpu.regs.line++;
+                next_line();
             }
             break;
 
@@ -176,12 +187,11 @@ void gpu_step(Word ticks)
                 {
                     // Restart scan
                     gpu.regs.line = 0;
-                    gpu.mode = OAM_MODE;
-                    gpu.modeclock = 0;
+                    set_mode(OAM_MODE);
                 }
                 else
                 {
-                    gpu.regs.line++;
+                    next_line();
                     gpu.modeclock = 0;
                 }
             }
@@ -204,6 +214,61 @@ void dma_transfer(Word addr)
         *oam++ = mmu_getbyte(addr++);
         *oam++ = mmu_getbyte(addr++);
         *oam++ = mmu_getbyte(addr++);
+    }
+}
+
+Byte get_lcd_status()
+{
+    Byte status = gpu.regs.status;
+
+    status |= (gpu.mode & 0x03);
+
+    if (gpu.regs.line == gpu.regs.coincidence)
+    {
+        status |= 0x04;
+    }
+
+    return status;
+}
+
+void set_mode(Byte mode)
+{
+    gpu.mode = mode;
+    gpu.modeclock = 0;
+
+    switch (mode)
+    {
+        case HBLANK_MODE:
+            if (gpu.regs.status & STAT_HBLANK)
+            {
+                mmu.iflag |= INT_LCD_STAT;
+            }
+            break;
+
+        case VBLANK_MODE:
+            if (gpu.regs.status & STAT_VBLANK)
+            {
+                mmu.iflag |= INT_LCD_STAT;
+            }
+            break;
+
+        case OAM_MODE:
+            if (gpu.regs.status & STAT_OAM)
+            {
+                mmu.iflag |= INT_LCD_STAT;
+            }
+            break;
+    }
+}
+
+void next_line()
+{
+    gpu.regs.line++;
+
+    if ((gpu.regs.status & STAT_COINCIDENCE) &&
+        gpu.regs.line == gpu.regs.coincidence)
+    {
+        mmu.iflag |= INT_LCD_STAT;
     }
 }
 
