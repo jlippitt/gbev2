@@ -45,6 +45,11 @@ static inline bool isset_flag(Byte flag)
 
 void render_scanline()
 {
+    if (!isset_flag(DISPLAY))
+    {
+        return;
+    }
+
     Byte bgcolour[DISPLAY_WIDTH];
 
     SDL_LockSurface(gpu.screen);
