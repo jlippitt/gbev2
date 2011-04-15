@@ -98,6 +98,7 @@ void render_scanline()
     if (isset_flag(OBJECT))
     {
         Byte *obj = gpu.oam;
+        Byte obj_height = isset_flag(OBJECT_SIZE) ? 16 : 8;
 
         for (int i = 0; i < 40; i++)
         {
@@ -107,14 +108,26 @@ void render_scanline()
             Byte obj_flags = *obj++;
 
             // Check if sprite falls on this scanline
-            if (obj_y <= LINE && (obj_y + TILE_SIZE) > LINE)
+            if (obj_y <= LINE && (obj_y + obj_height) > LINE)
             {
                 // Determine tile row offset
                 Byte tile_y = LINE - obj_y;
 
+                if (isset_flag(OBJECT_SIZE))
+                {
+                    if (tile_y < TILE_SIZE)
+                    {
+                        obj_tile &= ~0x1;
+                    }
+                    else
+                    {
+                        obj_tile |= 0x1;
+                    }
+                }
+
                 if (obj_flags & OBJ_YFLIP)
                 {
-                    tile_y = 7 - tile_y;
+                    tile_y = obj_height - tile_y - 1;
                 }
 
                 Byte *tile_row = get_tile(obj_tile, 1) + tile_y * 2;
