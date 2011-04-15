@@ -225,35 +225,35 @@ void z80_doframe()
             if (ifired & INT_VBLANK)
             {
                 printf("INT_VBLANK\n");
-                mmu.iflag &= INT_VBLANK;
+                mmu.iflag &= ~INT_VBLANK;
                 z80.regs.ime = 0;
                 RST40();
             }
             else if (ifired & INT_LCD_STAT)
             {
                 printf("INT_LCD_STAT\n");
-                mmu.iflag &= INT_LCD_STAT;
+                mmu.iflag &= ~INT_LCD_STAT;
                 z80.regs.ime = 0;
                 RST48();
             }
             else if (ifired & INT_TIMER)
             {
                 printf("INT_TIMER\n");
-                mmu.iflag &= INT_TIMER;
+                mmu.iflag &= ~INT_TIMER;
                 z80.regs.ime = 0;
                 RST50();
             }
             else if (ifired & INT_SERIAL)
             {
                 printf("INT_SERIAL\n");
-                mmu.iflag &= INT_SERIAL;
+                mmu.iflag &= ~INT_SERIAL;
                 z80.regs.ime = 0;
                 RST58();
             }
             else if (ifired & INT_JOYPAD)
             {
                 printf("INT_JOYPAD\n");
-                mmu.iflag &= INT_JOYPAD;
+                mmu.iflag &= ~INT_JOYPAD;
                 z80.regs.ime = 0;
                 RST60();
             }
