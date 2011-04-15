@@ -12,6 +12,8 @@
 #include "z80_misc.h"
 #include "z80_shift.h"
 
+#define CLOCK_SPEED 4194304
+
 struct Z80 z80 = {{{0}, {0}, {0}, {0}, 0, 0, 0, 0}, {0}, 0};
 
 static void ext_op();
@@ -200,6 +202,7 @@ void z80_reset()
 void z80_doframe()
 {
     uint32_t frame_time = z80.clock.m + 17556;
+    uint32_t sdl_frame_ticks = SDL_GetTicks() + (17556 * 4 / CLOCK_SPEED) + 1;
 
     do
     {
@@ -272,6 +275,13 @@ void z80_doframe()
         //printf("T=%d\n", z80.clock.m);
     }
     while (z80.clock.m < frame_time);
+
+    uint32_t sdl_cur_ticks = SDL_GetTicks();
+
+    if (sdl_cur_ticks < sdl_frame_ticks)
+    {
+        SDL_Delay(sdl_frame_ticks - sdl_cur_ticks);
+    }
 }
 
 void ext_op()
