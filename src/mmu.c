@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include "gpu.h"
 #include "joypad.h"
+#include "mbc.h"
 #include "mmu.h"
 #include "timer.h"
 #include "z80.h"
@@ -72,6 +73,9 @@ void mmu_load(const char *path)
         fread(mmu.rom, 1, len, fp);
 
         fclose(fp);
+
+        // Initialise MBC using cartridge type
+        mbc_init(mmu.rom[0x0147]);
     }
     else
     {
@@ -108,23 +112,23 @@ Byte mmu_getbyte(Word addr)
             assert(mmu.rom != NULL);
             return mmu.rom[addr];
 
-        // ROM1 (unbanked) (16k)
+        // ROM (switched bank)
         case 0x4000:
         case 0x5000:
         case 0x6000:
         case 0x7000:
             assert(mmu.rom != NULL);
-            return mmu.rom[addr];
+            return mmu.rom[mbc.rom_offset + (addr & 0x3FFF)];
 
         // Graphics: VRAM (8k)
         case 0x8000:
         case 0x9000:
             return gpu.vram[addr & 0x1FFF];
 
-        // External RAM (8k)
+        // External RAM
         case 0xA000:
         case 0xB000:
-            return mmu.eram[addr & 0x1FFF];
+            return mmu.eram[mbc.ram_offset + (addr & 0x1FFF)];
 
         // Working RAM (8k)
         case 0xC000:
@@ -215,15 +219,28 @@ void mmu_putbyte(Word addr, Byte value)
 {
     switch (addr & 0xF000)
     {
-        // ROM (read only)
+        // MBC1: External RAM switch
         case 0x0000:
         case 0x1000:
+            mbc_set_ram_state(value);
+            break;
+
+        // MBC1: ROM bank
         case 0x2000:
         case 0x3000:
+            mbc_set_rom_bank(value);
+            break;
+
+        // MBC1: RAM bank
         case 0x4000:
         case 0x5000:
+            mbc_set_ram_bank(value);
+            break;
+
+        // MBC1: Mode switch
         case 0x6000:
         case 0x7000:
+            mbc_set_mode(value);
             break;
 
         // Graphics: VRAM (8k)
@@ -232,10 +249,10 @@ void mmu_putbyte(Word addr, Byte value)
             gpu.vram[addr & 0x1FFF] = value;
             break;
 
-        // External RAM (8k)
+        // External RAM
         case 0xA000:
         case 0xB000:
-            mmu.eram[addr & 0x1FFF] = value;
+            mmu.eram[mbc.ram_offset + (addr & 0x1FFF)] = value;
             break;
 
         // Working RAM (8k)
