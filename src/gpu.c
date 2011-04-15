@@ -251,7 +251,18 @@ void gpu_dump_vram()
 
     for (i = 0; i < 384; i++)
     {
-        fprintf(fp, "0x%04X:\n", offset);
+        if (i < 128)
+        {
+            fprintf(fp, "TILE %d (0x%02X)\n", i, i);  
+        }
+        else if (i < 256)
+        {
+            fprintf(fp, "TILE %d (0x%02X/0x%02X)\n", i, i, (Byte)i - 128);  
+        }
+        else
+        {
+            fprintf(fp, "TILE %d (0x%02X)\n", -(384 - i), (Byte)i - 128);  
+        }
         
         for (j = 0; j < 8; j++)
         {
@@ -290,7 +301,7 @@ void gpu_dump_vram()
 
     for (i = 0; i < 2; i++)
     {
-        fprintf(fp, "0x%04X:\n", offset);
+        fprintf(fp, "BG MAP %d\n", i);
 
         for (j = 0; j < 32; j++)
         {

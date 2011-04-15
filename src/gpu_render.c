@@ -99,7 +99,7 @@ void render_scanline()
     {
         Byte *obj = gpu.oam;
 
-        while (obj < (Byte *)0xFEA0)
+        for (int i = 0; i < 40; i++)
         {
             Byte obj_y     = *obj++ - 16;
             Byte obj_x     = *obj++ - 8;
