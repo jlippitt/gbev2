@@ -53,8 +53,4 @@ void gpu_putbyte(Word addr, Byte value);
 
 void gpu_step(Word ticks);
 
-void gpu_dump_oam();
-
-void gpu_dump_vram();
-
 #endif

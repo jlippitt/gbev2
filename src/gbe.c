@@ -42,8 +42,5 @@ void gbe_run()
             }
         }
     }
-
-    gpu_dump_oam();
-    gpu_dump_vram();
 }
 
