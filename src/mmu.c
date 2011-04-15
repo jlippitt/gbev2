@@ -268,6 +268,7 @@ void mmu_putbyte(Word addr, Byte value)
                     if (addr == 0xFFFF)
                     {
                         // Interrupt enable/disable
+                        printf("IE: %02X\n", value);
                         mmu.ienable = value;
                     }
                     if (addr >= 0xFF80)
