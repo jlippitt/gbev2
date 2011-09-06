@@ -204,7 +204,7 @@ void gpu_step(Word ticks)
 
 void dma_transfer(Word addr)
 {
-    printf("DMA TRANSFER\n");
+    //printf("DMA TRANSFER\n");
     // OAM DMA
     Byte *oam = gpu.oam;
     //Byte tmp1, tmp2;
