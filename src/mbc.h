@@ -7,7 +7,7 @@ extern struct MBC
 {
     Byte cart_type;
 
-    Word rom_offset;
+    uint32_t rom_offset;
     Word ram_offset;
 
     struct
