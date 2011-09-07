@@ -27,7 +27,6 @@ struct MMU mmu = {
      0xDD, 0xDC, 0x99, 0x9F, 0xBB, 0xB9, 0x33, 0x3E, 0x3c, 0x42, 0xB9, 0xA5, 0xB9, 0xA5, 0x42, 0x4C,
      0x21, 0x04, 0x01, 0x11, 0xA8, 0x00, 0x1A, 0x13, 0xBE, 0x20, 0xFE, 0x23, 0x7D, 0xFE, 0x34, 0x20,
      0xF5, 0x06, 0x19, 0x78, 0x86, 0x23, 0x05, 0x20, 0xFB, 0x86, 0x20, 0xFE, 0x3E, 0x01, 0xE0, 0x50},
-    NULL,
     0,
     0
 };
@@ -35,9 +34,6 @@ struct MMU mmu = {
 void mmu_reset()
 {
     mmu.in_bios = true;
-
-    free(mmu.rom);
-    mmu.rom = NULL;
 
     mmu.ienable = 0;
     mmu.iflag   = 0;
@@ -47,40 +43,9 @@ void mmu_reset()
         mmu.wram[i] = 0;
     }
 
-    for (Word i = 0; i < ERAM_SIZE; i++)
-    {
-        mmu.eram[i] = 0;
-    }
-
     for (Word i = 0; i < ZRAM_SIZE; i++)
     {
         mmu.zram[i] = 0;
-    }
-}
-
-void mmu_load(const char *path)
-{
-    FILE *fp = fopen(path, "rb");
-
-    if (fp)
-    {
-        fseek(fp, 0, SEEK_END);
-        long len = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-
-        mmu.rom = malloc(len + 1);
-
-        fread(mmu.rom, 1, len, fp);
-
-        fclose(fp);
-
-        // Initialise MBC using cartridge type
-        mbc_init(mmu.rom[0x0147]);
-    }
-    else
-    {
-        fprintf(stderr, "Failed to open %s\n", path);
-        exit(1);
     }
 }
 
@@ -88,7 +53,7 @@ Byte mmu_getbyte(Word addr)
 {
     switch (addr & 0xF000)
     {
-        // BIOS (256b) / ROM0
+        // BIOS (256b) / ROM
         case 0x0000:
             if (mmu.in_bios)
             {
@@ -102,23 +67,17 @@ Byte mmu_getbyte(Word addr)
                 }
             }
 
-            assert(mmu.rom != NULL);
-            return mmu.rom[addr];
+            return mbc_getbyte(addr);
 
-        // ROM0
+        // ROM
         case 0x1000:
         case 0x2000:
         case 0x3000:
-            assert(mmu.rom != NULL);
-            return mmu.rom[addr];
-
-        // ROM (switched bank)
         case 0x4000:
         case 0x5000:
         case 0x6000:
         case 0x7000:
-            assert(mmu.rom != NULL);
-            return mmu.rom[mbc.rom_offset + (addr & 0x3FFF)];
+            return mbc_getbyte(addr);
 
         // Graphics: VRAM (8k)
         case 0x8000:
@@ -128,7 +87,7 @@ Byte mmu_getbyte(Word addr)
         // External RAM
         case 0xA000:
         case 0xB000:
-            return mmu.eram[mbc.ram_offset + (addr & 0x1FFF)];
+            return mbc_getbyte(addr);
 
         // Working RAM (8k)
         case 0xC000:
@@ -240,7 +199,7 @@ void mmu_putbyte(Word addr, Byte value)
         // External RAM
         case 0xA000:
         case 0xB000:
-            mmu.eram[mbc.ram_offset + (addr & 0x1FFF)] = value;
+            mbc_putbyte(addr, value);
             break;
 
         // Working RAM (8k)

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "mbc.h"
 
 #define ROM_ONLY      0x00
@@ -9,21 +10,78 @@
 #define MBC3_ERAM     0x12
 #define MBC3_ERAM_BAT 0x13
 
-struct MBC mbc = {0, 0, 0, {0, 0, 0, 0}};
+struct MBC mbc = {0, NULL, 0x4000, NULL, 0x0000, {0, 0, 0, 0}};
 
-void mbc_init(Byte cart_type)
+static void read_all(FILE *fp, Byte **buffer)
 {
-    printf("Cart Type: %02X\n", cart_type);
+    fseek(fp, 0, SEEK_END);
+    long len = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
 
-    mbc.cart_type = cart_type;
+    *buffer = malloc(len);
 
-    mbc.rom_offset = 0x4000;
-    mbc.ram_offset = 0x0000;
+    fread(*buffer, 1, len, fp);
+}
 
-    mbc.regs.rom_bank = 0;
-    mbc.regs.ram_bank = 0;
-    mbc.regs.ram_on   = 0;
-    mbc.regs.mode     = 0;
+void mbc_load(const char *path)
+{
+    FILE *fp = fopen(path, "rb");
+
+    if (fp)
+    {
+        // Read entire ROM into memory
+        read_all(fp, &mbc.rom);
+        fclose(fp);
+
+        // Initialise MBC using cartridge type
+        mbc.cart_type = mbc.rom[0x147];
+
+        printf("Cart Type: %02X\n", mbc.cart_type);
+
+        mbc.rom_offset = 0x4000;
+
+        mbc.ram = malloc(32768);
+        mbc.ram_offset = 0x0000;
+
+        mbc.regs.rom_bank = 0;
+        mbc.regs.ram_bank = 0;
+        mbc.regs.ram_on   = 0;
+        mbc.regs.mode     = 0;
+    }
+    else
+    {
+        fprintf(stderr, "Failed to open %s\n", path);
+        exit(1);
+    }
+
+}
+
+Byte mbc_getbyte(Word addr)
+{
+    switch (addr & 0xF000)
+    {
+        // ROM0
+        case 0x0000:
+        case 0x1000:
+        case 0x2000:
+        case 0x3000:
+            return mbc.rom[addr & 0x3FFF];
+
+        // ROM (switchable bank)
+        case 0x4000:
+        case 0x5000:
+        case 0x6000:
+        case 0x7000:
+            return mbc.rom[mbc.rom_offset + (addr & 0x3FFF)];
+
+        // External RAM
+        case 0xA000:
+        case 0xB000:
+            return mbc.ram[mbc.ram_offset + (addr & 0x1FFF)];
+
+        default:
+            return 0;
+    }
 }
 
 void mbc_putbyte(Word addr, Byte value)
@@ -128,6 +186,12 @@ void mbc_putbyte(Word addr, Byte value)
                     // TODO: Latch clock data
                     break;
             }
+            break;
+        
+        // External RAM
+        case 0xA000:
+        case 0xB000:
+            mbc.ram[mbc.ram_offset + (addr & 0x1FFF)] = value;
             break;
     }
 }

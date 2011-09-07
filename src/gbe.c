@@ -3,6 +3,7 @@
 #include "gbe.h"
 #include "gpu.h"
 #include "joypad.h"
+#include "mbc.h"
 #include "mmu.h"
 #include "z80.h"
 
@@ -12,7 +13,7 @@ void gbe_reset(const char *filename)
     mmu_reset();
     z80_reset();
 
-    mmu_load(filename);
+    mbc_load(filename);
 }
 
 void gbe_run()

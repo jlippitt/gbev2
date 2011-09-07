@@ -7,8 +7,11 @@ extern struct MBC
 {
     Byte cart_type;
 
+    Byte *rom;
     uint32_t rom_offset;
-    Word ram_offset;
+
+    Byte *ram;
+    uint32_t ram_offset;
 
     struct
     {
@@ -21,7 +24,9 @@ extern struct MBC
 }
 mbc;
 
-void mbc_init(Byte cart_type);
+void mbc_load(const char *path);
+
+Byte mbc_getbyte(Word addr);
 
 void mbc_putbyte(Word addr, Byte value);
 
