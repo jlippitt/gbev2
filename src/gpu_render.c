@@ -126,9 +126,11 @@ void render_scanline()
                 Byte *tile_row = get_tile(gpu.vram[map_offset + line_offset],
                         isset_flag(BG_TILE_SET)) + tile_y * 2;
     
-                uint32_t *pixel = ((uint32_t *)gpu.screen->pixels) + LINE * DISPLAY_WIDTH + WNDPOSX;
+                Byte start_x = WNDPOSX > 7 ? WNDPOSX - 7 : 0;
     
-                for (Byte i = WNDPOSX; i < DISPLAY_WIDTH; i++)
+                uint32_t *pixel = ((uint32_t *)gpu.screen->pixels) + LINE * DISPLAY_WIDTH + start_x;
+
+                for (Byte i = start_x; i < DISPLAY_WIDTH; i++)
                 {
                     Byte colour = ((tile_row[0] & (1 << (7 - tile_x))) ? 0x02 : 0) +
                                   ((tile_row[1] & (1 << (7 - tile_x))) ? 0x01 : 0);
