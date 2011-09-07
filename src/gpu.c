@@ -89,10 +89,10 @@ Byte gpu_getbyte(Word addr)
             return gpu.regs.coincidence;
 
         case 0xFF4A:
-            return gpu.regs.wndposx;
+            return gpu.regs.wndposy;
 
         case 0xFF4B:
-            return gpu.regs.wndposy;
+            return gpu.regs.wndposx;
 
         default:
             return 0;
@@ -140,12 +140,11 @@ void gpu_putbyte(Word addr, Byte value)
             break;
 
         case 0xFF4A:
-            gpu.regs.wndposx = value;
-            printf("WNDPOSX = %02X\n", gpu.regs.wndposx);
+            gpu.regs.wndposy = value;
             break;
 
         case 0xFF4B:
-            gpu.regs.wndposy = value;
+            gpu.regs.wndposx = value;
             break;
     }
 }
