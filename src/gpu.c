@@ -108,7 +108,7 @@ void gpu_putbyte(Word addr, Byte value)
             break;
 
         case 0xFF41:
-            gpu.regs.status = (value & 0x78);
+            gpu.regs.status = (value & 0x78) | (gpu.regs.status & 0x07);
             break;
 
         case 0xFF42:
