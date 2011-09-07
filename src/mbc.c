@@ -38,7 +38,7 @@ void mbc_putbyte(Word addr, Byte value)
                 case MBC1_ERAM_BAT:
                 case MBC3_ERAM:
                 case MBC3_ERAM_BAT:
-                    printf("RAM State: %02X\n", value); 
+                    //printf("RAM State: %02X\n", value); 
                     mbc.regs.ram_on = ((value & 0x0F) == 0x0A) ? 1 : 0;
                     break;
             }
@@ -51,7 +51,7 @@ void mbc_putbyte(Word addr, Byte value)
                 case MBC1:
                 case MBC1_ERAM:
                 case MBC1_ERAM_BAT:
-                    printf("ROM Bank (Lower): %02X\n", value); 
+                    //printf("ROM Bank (Lower): %02X\n", value); 
                     // Set lower 5 bits of rom bank (skipping #0)
                     mbc.regs.rom_bank = (mbc.regs.rom_bank & 0x60) + (value & 0x1F);
                     break;
@@ -59,7 +59,7 @@ void mbc_putbyte(Word addr, Byte value)
                 case MBC3:
                 case MBC3_ERAM:
                 case MBC3_ERAM_BAT:
-                    printf("ROM Bank: %02X\n", value); 
+                    //printf("ROM Bank: %02X\n", value); 
                     // Set all 7 bits of rom bank (skipping #0)
                     mbc.regs.rom_bank = value & 0x7F;
                     break;
@@ -78,14 +78,14 @@ void mbc_putbyte(Word addr, Byte value)
                 case MBC1_ERAM_BAT:
                     if (mbc.regs.mode)
                     {
-                        printf("RAM Bank: %02X\n", value); 
+                        //printf("RAM Bank: %02X\n", value); 
                         // RAM mode: Set bank
                         mbc.regs.ram_bank = value & 0x03;
                         mbc.ram_offset = mbc.regs.ram_bank * 0x2000;
                     }
                     else
                     {
-                        printf("ROM Bank (Upper): %02X\n", value); 
+                        //printf("ROM Bank (Upper): %02X\n", value); 
                         // ROM mode: Set upper 2 bits of bank
                         mbc.regs.rom_bank = (mbc.regs.rom_bank & 0x1F) +
                             ((value & 0x03) << 5);
@@ -99,7 +99,7 @@ void mbc_putbyte(Word addr, Byte value)
                 case MBC3_ERAM_BAT:
                     if (value <= 0x03)
                     {
-                        printf("RAM Bank: %02X\n", value); 
+                        //printf("RAM Bank: %02X\n", value); 
                         // RAM mode: Set bank
                         mbc.regs.ram_bank = value & 0x03;
                         mbc.ram_offset = mbc.regs.ram_bank * 0x2000;
@@ -118,7 +118,7 @@ void mbc_putbyte(Word addr, Byte value)
             {
                 case MBC1_ERAM:
                 case MBC1_ERAM_BAT:
-                    printf("MBC Mode: %02X\n", value); 
+                    //printf("MBC Mode: %02X\n", value); 
                     mbc.regs.mode = value & 0x01;
                     break;
 
