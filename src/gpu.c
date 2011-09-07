@@ -18,7 +18,7 @@ void set_mode(Byte mode);
 
 void next_line();
 
-struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0, 0}, {0, 0, 0}};
+struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0}};
 
 void gpu_reset()
 {
@@ -33,6 +33,8 @@ void gpu_reset()
     gpu.regs.control     = 0;
     gpu.regs.scrollx     = 0;
     gpu.regs.scrolly     = 0;
+    gpu.regs.wndposx     = 0;
+    gpu.regs.wndposy     = 0;
     gpu.regs.line        = 0;
     gpu.regs.coincidence = 0;
     gpu.regs.status      = 0;
@@ -86,6 +88,12 @@ Byte gpu_getbyte(Word addr)
         case 0xFF45:
             return gpu.regs.coincidence;
 
+        case 0xFF4A:
+            return gpu.regs.wndposx;
+
+        case 0xFF4B:
+            return gpu.regs.wndposy;
+
         default:
             return 0;
     }
@@ -101,6 +109,7 @@ void gpu_putbyte(Word addr, Byte value)
 
         case 0xFF41:
             gpu.regs.status = (value & 0x78);
+            break;
 
         case 0xFF42:
             gpu.regs.scrolly = value;
@@ -128,6 +137,15 @@ void gpu_putbyte(Word addr, Byte value)
 
         case 0xFF49:
             gpu.pal.obj1 = value;
+            break;
+
+        case 0xFF4A:
+            gpu.regs.wndposx = value;
+            printf("WNDPOSX = %02X\n", gpu.regs.wndposx);
+            break;
+
+        case 0xFF4B:
+            gpu.regs.wndposy = value;
             break;
     }
 }

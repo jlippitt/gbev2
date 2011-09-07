@@ -26,6 +26,8 @@ extern struct GPU
         Byte control;
         Byte scrollx;
         Byte scrolly;
+        Byte wndposx;
+        Byte wndposy;
         Byte line;
         Byte coincidence;
         Byte status;

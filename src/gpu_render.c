@@ -7,6 +7,8 @@
 #define CONTROL      (gpu.regs.control)
 #define SCROLLX      (gpu.regs.scrollx)
 #define SCROLLY      (gpu.regs.scrolly)
+#define WNDPOSX      (gpu.regs.wndposx)
+#define WNDPOSY      (gpu.regs.wndposy)
 #define LINE         (gpu.regs.line)
 #define RASTER       (gpu.regs.raster)
 #define PAL_BG       (gpu.pal.bg)
@@ -96,6 +98,56 @@ void render_scanline()
                 line_offset = (line_offset + 1) % MAP_SIZE;
                 tile_row = get_tile(gpu.vram[map_offset + line_offset],
                         isset_flag(BG_TILE_SET)) + tile_y * 2;
+            }
+        }
+    }
+
+    if (isset_flag(WINDOW))
+    {
+        // Check if window falls on this scanline
+        if (WNDPOSY <= LINE)
+        {
+            // Get starting offset for current tile map
+            Word map_offset = isset_flag(WND_TILE_MAP) ? 0x1C00 : 0x1800;
+
+            // Determine position to start from on background map
+            Byte bg_x = 0;
+            Byte bg_y = LINE - WNDPOSY;
+
+            // Determine line of tiles we're currently using
+            map_offset += bg_y / TILE_SIZE * MAP_SIZE;
+
+            // Determine which tile in the line to start with
+            Byte line_offset = 0; // Always first tile
+
+            // Determine tile pixel offsets
+            Byte tile_x = bg_x % TILE_SIZE;
+            Byte tile_y = bg_y % TILE_SIZE;
+
+            Byte *tile_row = get_tile(gpu.vram[map_offset + line_offset],
+                    isset_flag(BG_TILE_SET)) + tile_y * 2;
+
+            uint32_t *pixel = ((uint32_t *)gpu.screen->pixels) + LINE * DISPLAY_WIDTH + WNDPOSX;
+
+            for (Byte i = WNDPOSX; i < DISPLAY_WIDTH; i++)
+            {
+                Byte colour = ((tile_row[0] & (1 << (7 - tile_x))) ? 0x02 : 0) +
+                              ((tile_row[1] & (1 << (7 - tile_x))) ? 0x01 : 0);
+
+                bgcolour[i] = colour;
+
+                draw_pixel(pixel, colour, PAL_BG);
+
+                tile_x++;
+                pixel++;
+
+                if (tile_x == TILE_SIZE)
+                {
+                    tile_x = 0;
+                    line_offset++; // Cannot wrap - no need for modulus
+                    tile_row = get_tile(gpu.vram[map_offset + line_offset],
+                            isset_flag(BG_TILE_SET)) + tile_y * 2;
+                }
             }
         }
     }
