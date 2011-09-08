@@ -1,5 +1,7 @@
-#include <stdio.h>
+#include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include "mbc.h"
 
 #define ROM_ONLY      0x00
@@ -10,17 +12,63 @@
 #define MBC3_ERAM     0x12
 #define MBC3_ERAM_BAT 0x13
 
-struct MBC mbc = {0, NULL, 0x4000, NULL, 0x0000, {0, 0, 0, 0}};
+struct MBC mbc = {0, NULL, 0x4000, NULL, 0, 0x0000, NULL, {0, 0, 0, 0}};
 
-static void read_all(FILE *fp, Byte **buffer)
+static inline bool is_battery()
 {
-    fseek(fp, 0, SEEK_END);
-    long len = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    switch (mbc.cart_type)
+    {
+        case MBC1_ERAM_BAT:
+        case MBC3_ERAM_BAT:
+            return true;
 
-    *buffer = malloc(len);
+        default:
+            return false;
+    }
+}
 
-    fread(*buffer, 1, len, fp);
+static void load_ram(const char *rom_path)
+{
+    // Work out ram file path
+    const char *separator = strrchr(rom_path, '.');
+
+    char *ram_path;
+
+    if (separator)
+    {
+        size_t len = separator - rom_path;
+        ram_path = malloc(len + 1);
+        strncpy(ram_path, rom_path, len);
+        ram_path[len] = '\0';
+    }
+    else
+    {
+        ram_path = malloc(strlen(rom_path) + 4);
+        strcpy(ram_path, rom_path);
+    }
+
+    strcat(ram_path, ".ram");
+
+    mbc.ram_file = fopen(ram_path, "r+b");
+
+    if (mbc.ram_file)
+    {
+        // Read existing RAM into memory
+        fseek(mbc.ram_file, 0, SEEK_END);
+        long len = ftell(mbc.ram_file);
+        fseek(mbc.ram_file, 0, SEEK_SET);
+        fread(mbc.ram, 1, len, mbc.ram_file);
+    }
+    else
+    {
+        mbc.ram_file = fopen(ram_path, "w+b");
+
+        // Fill up RAM file with blank data
+        for (uint32_t i = 0; i < mbc.ram_size; i++)
+        {
+            fputc('\0', mbc.ram_file);
+        }
+    }
 }
 
 void mbc_load(const char *path)
@@ -30,19 +78,62 @@ void mbc_load(const char *path)
     if (fp)
     {
         // Read entire ROM into memory
-        read_all(fp, &mbc.rom);
+        fseek(fp, 0, SEEK_END);
+        long len = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+        mbc.rom = malloc(len);
+        fread(mbc.rom, 1, len, fp);
         fclose(fp);
 
-        // Initialise MBC using cartridge type
+        mbc.rom_offset = 0x4000;
         mbc.cart_type = mbc.rom[0x147];
 
         printf("Cart Type: %02X\n", mbc.cart_type);
 
-        mbc.rom_offset = 0x4000;
+        // Initialise RAM
+        switch (mbc.rom[0x149])
+        {
+            case 0:
+                mbc.ram_size = 0;
+                break;
+
+            case 1:
+                mbc.ram_size = 2048;
+                break;
+
+            case 2:
+                mbc.ram_size = 8192;
+                break;
+
+            case 3:
+                mbc.ram_size = 32768;
+                break;
+
+            case 4:
+                mbc.ram_size = 131072;
+                break;
+        }
+
+        printf("RAM Size: %u\n", mbc.ram_size);
+
+        if (mbc.ram_size > 0)
+        {
+            mbc.ram = malloc(mbc.ram_size);
+        }
+        else
+        {
+            mbc.ram = NULL;
+        }
 
         mbc.ram = malloc(32768);
         mbc.ram_offset = 0x0000;
 
+        if (is_battery())
+        {
+            load_ram(path);
+        }
+
+        // Initialise bank switch settings
         mbc.regs.rom_bank = 0;
         mbc.regs.ram_bank = 0;
         mbc.regs.ram_on   = 0;
@@ -54,6 +145,17 @@ void mbc_load(const char *path)
         exit(1);
     }
 
+}
+
+void mbc_cleanup()
+{
+    if (is_battery())
+    {
+        fclose(mbc.ram_file);
+    }
+
+    free(mbc.ram);
+    free(mbc.rom);
 }
 
 Byte mbc_getbyte(Word addr)
@@ -77,6 +179,7 @@ Byte mbc_getbyte(Word addr)
         // External RAM
         case 0xA000:
         case 0xB000:
+            assert((mbc.ram_offset + (addr & 0x1FFF)) < mbc.ram_size);
             return mbc.ram[mbc.ram_offset + (addr & 0x1FFF)];
 
         default:
@@ -191,7 +294,19 @@ void mbc_putbyte(Word addr, Byte value)
         // External RAM
         case 0xA000:
         case 0xB000:
-            mbc.ram[mbc.ram_offset + (addr & 0x1FFF)] = value;
+            {
+                uint32_t offset = mbc.ram_offset + (addr & 0x1FFF);
+
+                assert(offset < mbc.ram_size);
+
+                mbc.ram[offset] = value;
+
+                if (is_battery())
+                {
+                    fseek(mbc.ram_file, offset, SEEK_SET);
+                    fputc(value, mbc.ram_file);
+                }
+            }
             break;
     }
 }

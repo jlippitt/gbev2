@@ -1,6 +1,7 @@
 #ifndef MBC_H
 #define MBC_H
 
+#include <stdio.h>
 #include "types.h"
 
 extern struct MBC
@@ -11,7 +12,10 @@ extern struct MBC
     uint32_t rom_offset;
 
     Byte *ram;
+    uint32_t ram_size;
     uint32_t ram_offset;
+
+    FILE* ram_file;
 
     struct
     {
@@ -25,6 +29,8 @@ extern struct MBC
 mbc;
 
 void mbc_load(const char *path);
+
+void mbc_cleanup();
 
 Byte mbc_getbyte(Word addr);
 
