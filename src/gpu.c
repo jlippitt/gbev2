@@ -88,6 +88,15 @@ Byte gpu_getbyte(Word addr)
         case 0xFF45:
             return gpu.regs.coincidence;
 
+        case 0xFF47:
+            return gpu.pal.bg;
+
+        case 0xFF48:
+            return gpu.pal.obj0;
+
+        case 0xFF49:
+            return gpu.pal.obj1;
+
         case 0xFF4A:
             return gpu.regs.wndposy;
 
