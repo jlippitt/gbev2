@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "gpu.h"
 #include "gpu_render.h"
 
@@ -36,9 +37,21 @@
 #define MAP_SIZE     32
 #define TILE_SIZE    8
 
+typedef struct Sprite
+{
+    Byte id;
+    Byte y;
+    Byte x;
+    Byte tile;
+    Byte flags;
+}
+Sprite;
+
 static Byte *get_tile(Byte tile_no, Byte tileset);
 
 static void draw_pixel(uint32_t *pixel, Byte colour, Byte palette);
+
+int sprite_compare(const void *sprite1, const void *sprite2);
 
 static inline bool isset_flag(Byte flag)
 {
@@ -156,15 +169,37 @@ void render_scanline()
 
     if (isset_flag(OBJECT))
     {
+        Sprite sprites[40];
+
+        /*
+         * Determine sprite priority
+         */
+
         Byte *obj = gpu.oam;
+
+        for (int i = 0; i < 40; i++)
+        {
+            sprites[i].id    = i;
+            sprites[i].y     = *obj++;
+            sprites[i].x     = *obj++;
+            sprites[i].tile  = *obj++;
+            sprites[i].flags = *obj++;
+        }
+
+        qsort(&sprites[0], 40, sizeof(Sprite), &sprite_compare);
+
+        /*
+         * Draw sprites
+         */
+
         Byte obj_height = isset_flag(OBJECT_SIZE) ? 16 : 8;
 
         for (int i = 0; i < 40; i++)
         {
-            Byte obj_y     = *obj++ - 16;
-            Byte obj_x     = *obj++ - 8;
-            Byte obj_tile  = *obj++;
-            Byte obj_flags = *obj++;
+            Byte obj_y     = sprites[i].y - 16;
+            Byte obj_x     = sprites[i].x - 8;
+            Byte obj_tile  = sprites[i].tile;
+            Byte obj_flags = sprites[i].flags;
 
             // Check if sprite falls on this scanline
             if (obj_y <= LINE && (obj_y + obj_height) > LINE)
@@ -255,6 +290,18 @@ void draw_pixel(uint32_t *pixel, Byte colour, Byte palette)
         case 3:
             *pixel = SDL_MapRGBA(gpu.screen->format, 0x00, 0x00, 0x00, 0xFF);
             break;
+    }
+}
+
+int sprite_compare(const void *sprite1, const void *sprite2)
+{
+    if (((Sprite *)sprite1)->x == ((Sprite *)sprite2)->x)
+    {
+        return ((Sprite *)sprite2)->id - ((Sprite *)sprite1)->id;
+    }
+    else
+    {
+        return ((Sprite *)sprite2)->x - ((Sprite *)sprite1)->x;
     }
 }
 
