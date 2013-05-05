@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -274,6 +275,8 @@ Byte *get_tile(Byte tile_no, Byte tileset)
 
 void draw_pixel(uint32_t *pixel, Byte colour, Byte palette)
 {
+    assert(colour < 4);
+
     switch ((palette & (0x03 << (colour * 2))) >> (colour * 2))
     {
         case 0:
@@ -291,6 +294,9 @@ void draw_pixel(uint32_t *pixel, Byte colour, Byte palette)
         case 3:
             *pixel = SDL_MapRGBA(gpu.screen->format, 0x00, 0x00, 0x00, 0xFF);
             break;
+
+        default:
+            assert(false);
     }
 }
 
