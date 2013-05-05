@@ -18,7 +18,7 @@ void set_mode(Byte mode);
 
 void next_line();
 
-struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0}};
+struct GPU gpu = {NULL, HBLANK_MODE, 0, {0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0}, {}, {}};
 
 void gpu_reset()
 {
