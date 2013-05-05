@@ -96,8 +96,8 @@ void render_scanline()
 
         for (Byte i = 0; i < DISPLAY_WIDTH; i++)
         {
-            Byte colour = ((tile_row[0] & (1 << (7 - tile_x))) ? 0x02 : 0) +
-                          ((tile_row[1] & (1 << (7 - tile_x))) ? 0x01 : 0);
+            Byte colour = ((tile_row[0] & (1 << (7 - tile_x))) ? 0x01 : 0) +
+                          ((tile_row[1] & (1 << (7 - tile_x))) ? 0x02 : 0);
 
             bgcolour[i] = colour;
 
@@ -146,8 +146,8 @@ void render_scanline()
 
                 for (Byte i = start_x; i < DISPLAY_WIDTH; i++)
                 {
-                    Byte colour = ((tile_row[0] & (1 << (7 - tile_x))) ? 0x02 : 0) +
-                                  ((tile_row[1] & (1 << (7 - tile_x))) ? 0x01 : 0);
+                    Byte colour = ((tile_row[0] & (1 << (7 - tile_x))) ? 0x01 : 0) +
+                                  ((tile_row[1] & (1 << (7 - tile_x))) ? 0x02 : 0);
     
                     bgcolour[i] = colour;
     
@@ -229,8 +229,8 @@ void render_scanline()
                 {
                     Byte tile_x = (obj_flags & OBJ_XFLIP) ? i : (7 - i);
 
-                    Byte colour = ((tile_row[0] & (1 << tile_x)) ? 0x02 : 0) +
-                                  ((tile_row[1] & (1 << tile_x)) ? 0x01 : 0);
+                    Byte colour = ((tile_row[0] & (1 << tile_x)) ? 0x01 : 0) +
+                                  ((tile_row[1] & (1 << tile_x)) ? 0x02 : 0);
 
                     // - Make sure pixel is on screen
                     // - Pixel not be transparent
