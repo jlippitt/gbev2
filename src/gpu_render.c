@@ -209,14 +209,7 @@ void render_scanline()
 
                 if (isset_flag(OBJECT_SIZE))
                 {
-                    if (tile_y < TILE_SIZE)
-                    {
-                        obj_tile &= ~0x1;
-                    }
-                    else
-                    {
-                        obj_tile |= 0x1;
-                    }
+                    obj_tile &= ~0x1;
                 }
 
                 if (obj_flags & OBJ_YFLIP)
