@@ -194,6 +194,8 @@ void render_scanline()
 
         Byte obj_height = isset_flag(OBJECT_SIZE) ? 16 : 8;
 
+        int displayed_sprites = 0;
+
         for (int i = 0; i < 40; i++)
         {
             Byte obj_y     = sprites[i].y - 16;
@@ -244,6 +246,12 @@ void render_scanline()
                     }
 
                     ++pixel;
+                }
+
+                // Maximum of 10 sprites per scanline
+                if (++displayed_sprites == 10)
+                {
+                    break;
                 }
             }
         }
