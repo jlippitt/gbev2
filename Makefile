@@ -1,10 +1,10 @@
 CC=gcc
-CFLAGS=-std=c99 -Wall
+CFLAGS=-std=c99 -Wall -Wextra -Werror
 LDFLAGS=-Wall
-LDLIBS=-lmingw32 -lSDLmain -lSDL
+LDLIBS=-lSDLmain -lSDL
 SOURCES=$(wildcard src/*.c)
 OBJECTS=$(SOURCES:.c=.o)
-EXECUTABLE=gbe.exe
+EXECUTABLE=gbe
 
 all: $(SOURCES) $(EXECUTABLE)
 
