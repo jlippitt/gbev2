@@ -27,9 +27,9 @@ Then run make as normal:
 
 # Game Controls
 
-Directional buttons = D-Pad
-Enter = Start button
-Space = Select button
-Z = A button
-X = B button
+* Directional buttons = D-Pad
+* Enter = Start button
+* Space = Select button
+* Z = A button
+* X = B button
 
