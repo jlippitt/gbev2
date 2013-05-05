@@ -297,14 +297,15 @@ void mbc_putbyte(Word addr, Byte value)
             {
                 uint32_t offset = mbc.ram_offset + (addr & 0x1FFF);
 
-                assert(offset < mbc.ram_size);
-
-                mbc.ram[offset] = value;
-
-                if (is_battery())
+                if (offset < mbc.ram_size)
                 {
-                    fseek(mbc.ram_file, offset, SEEK_SET);
-                    fputc(value, mbc.ram_file);
+                    mbc.ram[offset] = value;
+
+                    if (is_battery())
+                    {
+                        fseek(mbc.ram_file, offset, SEEK_SET);
+                        fputc(value, mbc.ram_file);
+                    }
                 }
             }
             break;
