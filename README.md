@@ -33,3 +33,9 @@ Then run make as normal:
 * Z = A button
 * X = B button
 
+# Known Issues
+
+* Currently no sound
+* Not all cartridge types are supported
+* Minor graphical glitches
+
